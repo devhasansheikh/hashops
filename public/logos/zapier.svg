@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Zapier "zap" — six-arm burst in brand orange, tile-less -->
+  <g fill="#FF4F00">
+    <rect x="10.7" y="2.2" width="2.6" height="19.6" rx="1.3"/>
+    <rect x="10.7" y="2.2" width="2.6" height="19.6" rx="1.3" transform="rotate(60 12 12)"/>
+    <rect x="10.7" y="2.2" width="2.6" height="19.6" rx="1.3" transform="rotate(120 12 12)"/>
+  </g>
+</svg>

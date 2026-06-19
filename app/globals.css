@@ -1,0 +1,522 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ */
+/* HASH brand tokens — Flame is the signal, not the canvas (70/25/5)  */
+/* ------------------------------------------------------------------ */
+
+:root {
+  --flame: #ff7a1a;
+  --sunrise: #ffa033;
+  --ember: #e55a00;
+}
+
+[data-theme="dark"] {
+  --bg: #0a0a0b;
+  --surface: #141417;
+  --surface-2: #1a1a1e;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --heading: #fafaf7;
+  --body: #9b9ba3;
+  --body-strong: #cfcfd6;
+  --muted: #6c6c74;
+  --flame-glow: rgba(255, 122, 26, 0.16);
+  --flame-text: #ff8a3d;
+  --grad-from: #ff7a1a;
+  --grad-to: #ffa033;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --window-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.7);
+  --card-bg: #17171c;
+  --card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 22px 48px -30px rgba(0, 0, 0, 0.8), 0 4px 14px -8px rgba(0, 0, 0, 0.6);
+  --card-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 30px 60px -26px rgba(0, 0, 0, 0.85),
+    0 18px 44px -22px rgba(255, 122, 26, 0.22);
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: #fafaf7;
+  --surface: #ffffff;
+  --surface-2: #f2f2ec;
+  --border: rgba(10, 10, 11, 0.1);
+  --border-strong: rgba(10, 10, 11, 0.18);
+  --heading: #0a0a0b;
+  --body: #6b6b72;
+  --body-strong: #2c2c2a;
+  --muted: #a6a6ad;
+  --flame-glow: rgba(255, 122, 26, 0.12);
+  /* biased toward Ember for WCAG AA on light bg */
+  --flame-text: #bc4a00;
+  --grad-from: #c94e00;
+  --grad-to: #f0700e;
+  --success: #1d9e75;
+  --warning: #ef9f27;
+  --danger: #e24b4a;
+  --window-shadow: 0 40px 90px -48px rgba(10, 10, 11, 0.35);
+  --card-bg: #ffffff;
+  --card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 20px 40px -26px rgba(10, 10, 11, 0.18), 0 3px 10px -4px rgba(10, 10, 11, 0.08);
+  --card-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 28px 54px -24px rgba(10, 10, 11, 0.22),
+    0 16px 40px -22px rgba(255, 122, 26, 0.18);
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--body);
+  font-family: var(--font-jost), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+  /* Theme swaps are made instant + uniform by next-themes
+     (disableTransitionOnChange), so no per-element colour transition here. */
+}
+
+::selection {
+  background: rgba(255, 122, 26, 0.28);
+  color: var(--heading);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-hanken), system-ui, sans-serif;
+  color: var(--heading);
+}
+
+/* ------------------------------------------------------------------ */
+/* Typography helpers                                                  */
+/* ------------------------------------------------------------------ */
+
+.eyebrow {
+  font-family: var(--font-jbmono), monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--flame-text);
+}
+
+.gradient-text {
+  background: linear-gradient(
+    100deg,
+    var(--grad-from),
+    var(--grad-to),
+    var(--grad-from)
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientFlow 13s ease-in-out infinite;
+}
+@keyframes gradientFlow {
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Elevated cards — stay distinct from the background in both themes    */
+/* ------------------------------------------------------------------ */
+
+.surface-card {
+  position: relative;
+  /* clean floating surface with a faint top sheen (sample1 style) */
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 16%),
+    var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--card-shadow);
+}
+
+/* cursor-following Flame spotlight on every card (set by CardSpotlight) */
+.surface-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    220px circle at var(--mx, 50%) var(--my, -20%),
+    rgba(255, 138, 50, 0.13),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.surface-card:hover::before {
+  opacity: 1;
+}
+/* keep card content above the spotlight layer */
+.surface-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.surface-card-lift {
+  transition:
+    transform 0.4s cubic-bezier(0.2, 0.7, 0.3, 1),
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.surface-card-lift:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255, 122, 26, 0.5);
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* ------------------------------------------------------------------ */
+/* Backdrop — the animated horizon arc is WebGL (components/Backdrop).  */
+/* This is only the CSS fallback shown if WebGL is unavailable.         */
+/* ------------------------------------------------------------------ */
+
+.backdrop-fallback {
+  background:
+    radial-gradient(
+      120% 70% at 50% 12%,
+      rgba(255, 138, 40, 0.22),
+      rgba(229, 90, 0, 0.08) 30%,
+      transparent 58%
+    ),
+    var(--bg);
+}
+[data-theme="light"] .backdrop-fallback {
+  background:
+    radial-gradient(
+      120% 70% at 50% 12%,
+      rgba(255, 138, 40, 0.16),
+      transparent 55%
+    ),
+    var(--bg);
+}
+
+/* ------------------------------------------------------------------ */
+/* Buttons — matte, layered depth, machined metal not wet plastic      */
+/* ------------------------------------------------------------------ */
+
+.btn-primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, #ff8838, #ee6e16 48%, #d85706);
+  color: #fff;
+  font-family: var(--font-hanken), sans-serif;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -9px 14px -11px rgba(120, 40, 0, 0.5),
+    0 8px 22px -9px rgba(216, 87, 6, 0.5),
+    0 2px 5px rgba(0, 0, 0, 0.22);
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.7, 0.3, 1),
+    filter 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: -65%;
+  width: 42%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transform: skewX(-22deg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -9px 14px -11px rgba(120, 40, 0, 0.5),
+    0 14px 30px -10px rgba(216, 87, 6, 0.55),
+    0 3px 7px rgba(0, 0, 0, 0.25);
+}
+
+.btn-primary:hover::after {
+  opacity: 1;
+  animation: sheen 0.7s ease forwards;
+}
+
+.btn-primary:active {
+  transform: scale(0.985);
+}
+
+.btn-primary .btn-arrow {
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.btn-primary:hover .btn-arrow {
+  transform: translateX(3px);
+}
+
+@keyframes sheen {
+  from {
+    left: -65%;
+  }
+  to {
+    left: 125%;
+  }
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 11px;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--body-strong);
+  font-family: var(--font-hanken), sans-serif;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.7, 0.3, 1),
+    border-color 0.25s ease,
+    color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  border-color: var(--flame);
+  color: var(--heading);
+}
+
+.btn-secondary:active {
+  transform: scale(0.985);
+}
+
+/* ------------------------------------------------------------------ */
+/* Tool marquee                                                        */
+/* ------------------------------------------------------------------ */
+
+.marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 12%,
+    black 88%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 12%,
+    black 88%,
+    transparent
+  );
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* mono brand marks (Notion, OpenAI) — theme-aware via CSS mask */
+.logo-mask {
+  display: inline-block;
+  background-color: var(--heading);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* ------------------------------------------------------------------ */
+/* Video placeholder play button                                       */
+/* ------------------------------------------------------------------ */
+
+.play-ring {
+  animation: playPulse 2.4s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+}
+
+@keyframes playPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Workspace + quiz details                                            */
+/* ------------------------------------------------------------------ */
+
+.ws-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.ws-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 99px;
+}
+
+.toggle-knob {
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* ------------------------------------------------------------------ */
+/* ROI calculator range sliders — brand flame thumb + filled track     */
+/* ------------------------------------------------------------------ */
+
+.roi-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  outline: none;
+  cursor: pointer;
+}
+
+.roi-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 22px;
+  width: 22px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ff8838, #e55a00);
+  border: 2px solid var(--bg);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 4px 12px -2px rgba(216, 87, 6, 0.55);
+  transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.roi-slider::-moz-range-thumb {
+  height: 22px;
+  width: 22px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ff8838, #e55a00);
+  border: 2px solid var(--bg);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 4px 12px -2px rgba(216, 87, 6, 0.55);
+  transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.roi-slider::-moz-range-track {
+  background: transparent;
+}
+
+.roi-slider:hover::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+.roi-slider:active::-webkit-slider-thumb {
+  transform: scale(1.04);
+}
+.roi-slider:hover::-moz-range-thumb {
+  transform: scale(1.12);
+}
+.roi-slider:active::-moz-range-thumb {
+  transform: scale(1.04);
+}
+
+.roi-slider:focus-visible {
+  box-shadow: 0 0 0 3px var(--flame-glow);
+}
+
+/* ------------------------------------------------------------------ */
+/* Reduced motion: kill marquee, sheen, pulse, smooth scroll           */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: auto;
+    justify-content: center;
+  }
+  .marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .play-ring {
+    animation: none;
+    opacity: 0;
+  }
+  .btn-primary:hover::after {
+    animation: none;
+    opacity: 0;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

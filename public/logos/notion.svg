@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- monochrome mark: rendered via CSS mask in the theme heading colour -->
+  <path fill="#000" fill-rule="evenodd" d="M5.1 3.6 17.4 2.7c1.1-.08 1.9.26 2.5 1l1.2 1.3c.5.55.7 1.1.7 1.95v12.5c0 1.3-.75 2.05-2.05 2.15l-12.9.85c-1.25.08-2.05-.3-2.7-1.15l-1.1-1.45c-.45-.6-.65-1.2-.65-2V6.1c0-1.4.85-2.35 2.7-2.5Zm1.6 3.2h10.6v11.6H6.7V6.8Z"/>
+  <path fill="#000" d="M8.7 16.9V8.55l1.85-.15 4.25 6.3V8.2l1.8-.15v8.9l-1.85.15-4.3-6.4v6.35l-1.75-.15Z"/>
+</svg>
