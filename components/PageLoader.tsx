@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useReduceMotion } from "@/lib/useReduceMotion";
 import { Logo } from "@/components/Logo";
 
 const ease = [0.2, 0.7, 0.3, 1] as const;
@@ -11,7 +12,7 @@ const ease = [0.2, 0.7, 0.3, 1] as const;
  * first paint isn't blocked.
  */
 export function PageLoader() {
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
   const [done, setDone] = useState(false);
 
   useEffect(() => {

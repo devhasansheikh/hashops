@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { animate, useInView, useReducedMotion } from "framer-motion";
+import { animate, useInView } from "framer-motion";
+import { useReduceMotion } from "@/lib/useReduceMotion";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { Reveal } from "@/components/ui/Reveal";
 
@@ -74,7 +75,7 @@ function Slider({
         aria-label={label}
         onChange={(e) => onChange(Number(e.target.value))}
         style={{
-          background: `linear-gradient(90deg, var(--flame) ${pct}%, var(--surface-2) ${pct}%)`,
+          background: `linear-gradient(90deg, var(--ember), var(--sunrise) ${pct}%, var(--surface-2) ${pct}%, var(--surface-2))`,
         }}
       />
       <div className="mt-2 flex justify-between font-mono text-[10px] text-muted">
@@ -99,7 +100,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 }
 
 export function CostBlock() {
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -156,7 +157,7 @@ export function CostBlock() {
             <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
               What it&apos;s costing you
             </p>
-            <p className="mt-2.5 font-display text-[clamp(2.6rem,8vw,4.4rem)] font-bold leading-none tracking-[-0.02em]">
+            <p className="mt-2.5 whitespace-nowrap font-display text-[clamp(2.15rem,8vw,4.4rem)] font-bold leading-none tracking-[-0.02em]">
               <span className="gradient-text tabular-nums">
                 {money(animatedYear)}
               </span>
@@ -167,7 +168,7 @@ export function CostBlock() {
           </div>
 
           {/* breakdown */}
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="mt-8 grid grid-cols-3 gap-2.5 sm:gap-3">
             <Stat label="Per week" value={money(perWeek)} />
             <Stat label="Hours / year" value={`${hoursYear.toLocaleString("en-US")} hrs`} />
             <Stat

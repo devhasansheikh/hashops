@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useReduceMotion } from "@/lib/useReduceMotion";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { Logo } from "@/components/Logo";
@@ -333,7 +334,7 @@ function DashboardView() {
   return (
     <div className="flex h-full flex-col gap-2.5">
       {/* KPI row with sparklines */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-4 gap-3">
         {KPI_CARDS.map((kpi) => (
           <div key={kpi.label} className="rounded-xl border border-line bg-surface2/60 p-3">
             <p className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-muted">
@@ -351,7 +352,7 @@ function DashboardView() {
       </div>
 
       {/* charts row */}
-      <div className="grid min-h-0 flex-1 grid-cols-1 gap-2.5 lg:grid-cols-[1.5fr_1fr]">
+      <div className="grid min-h-0 flex-1 grid-cols-[1.5fr_1fr] gap-2.5">
         <div className="flex flex-col rounded-xl border border-line bg-surface2/60 p-4">
           <div className="flex items-center justify-between">
             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
@@ -395,7 +396,7 @@ function DashboardView() {
       </div>
 
       {/* activity + automation health */}
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1.3fr_1fr]">
+      <div className="grid grid-cols-[1.3fr_1fr] gap-3">
         <div className="rounded-xl border border-line bg-surface2/60 p-4">
           <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
             Recent activity
@@ -585,7 +586,7 @@ function AutomationsView({
             </p>
             <p className="truncate text-[11.5px] text-body">{auto.desc}</p>
           </div>
-          <span className="hidden font-mono text-[10px] text-muted sm:block">
+          <span className="font-mono text-[10px] text-muted">
             {auto.runs}
           </span>
           <button
@@ -679,7 +680,7 @@ export function OpsWorkspace() {
   const [view, setView] = useState<ViewKey>("dashboard");
   const [tasks, setTasks] = useState(INITIAL_TASKS);
   const [autos, setAutos] = useState(INITIAL_AUTOMATIONS);
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
 
   const toggleTask = (id: number) =>
     setTasks((ts) => ts.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));

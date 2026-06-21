@@ -25,7 +25,7 @@ export function VideoBlock() {
       />
 
       <Reveal delay={0.12} scale={0.95} blur className="mx-auto mt-12 max-w-[880px]">
-        <div className="surface-card overflow-hidden rounded-window border-strong">
+        <div className="surface-card surface-card-lift overflow-hidden rounded-window border-strong">
           <div className="relative aspect-video">
             {VIDEO_MP4 ? (
               <video

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useReduceMotion } from "@/lib/useReduceMotion";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
 
@@ -26,7 +27,7 @@ const ITEMS = [
 
 export function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
 
   return (
     <section id="faq" className="relative px-5 py-24 sm:px-8">
@@ -45,7 +46,7 @@ export function FAQ() {
                 <button
                   onClick={() => setOpen(isOpen ? null : i)}
                   aria-expanded={isOpen}
-                  className="flex w-full items-center justify-between gap-6 px-6 py-5 text-left transition-colors hover:bg-surface2/40 sm:px-8"
+                  className="flex w-full items-center justify-between gap-3 px-6 py-5 text-left transition-colors hover:bg-surface2/40 sm:gap-6 sm:px-8"
                 >
                   <span
                     className={`font-display text-[15.5px] font-medium transition-colors ${

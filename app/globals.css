@@ -152,6 +152,14 @@ h4 {
     var(--card-bg);
   border: 1px solid var(--border);
   box-shadow: var(--card-shadow);
+  transition:
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+/* every card warms its edge as the cursor enters (pairs with the spotlight) */
+.surface-card:hover {
+  border-color: rgba(255, 122, 26, 0.24);
 }
 
 /* cursor-following Flame spotlight on every card (set by CardSpotlight) */
@@ -179,7 +187,10 @@ h4 {
   z-index: 1;
 }
 
+/* Feature cards: a smooth lift on hover (no 3D). --lift is overridable
+   per card (e.g. the featured pricing tier rests higher). */
 .surface-card-lift {
+  transform: translateY(var(--lift, 0px));
   transition:
     transform 0.4s cubic-bezier(0.2, 0.7, 0.3, 1),
     border-color 0.4s ease,
@@ -187,7 +198,7 @@ h4 {
 }
 
 .surface-card-lift:hover {
-  transform: translateY(-6px);
+  --lift: -6px;
   border-color: rgba(255, 122, 26, 0.5);
   box-shadow: var(--card-shadow-hover);
 }
@@ -302,6 +313,7 @@ h4 {
 }
 
 .btn-secondary {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -314,17 +326,50 @@ h4 {
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 2px 6px -3px rgba(0, 0, 0, 0.25);
   transition:
     transform 0.25s cubic-bezier(0.2, 0.7, 0.3, 1),
     border-color 0.25s ease,
     color 0.25s ease,
-    background-color 0.25s ease;
+    box-shadow 0.25s ease;
+}
+
+/* same flame-tinted sheen sweep as the primary CTA, readable on both themes */
+.btn-secondary::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: -65%;
+  width: 42%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 138, 50, 0.22),
+    transparent
+  );
+  transform: skewX(-22deg);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .btn-secondary:hover {
   transform: translateY(-2px);
   border-color: var(--flame);
   color: var(--heading);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 20px -8px var(--flame),
+    0 12px 26px -12px var(--flame);
+}
+
+.btn-secondary:hover::after {
+  opacity: 1;
+  animation: sheen 0.7s ease forwards;
 }
 
 .btn-secondary:active {
@@ -435,6 +480,9 @@ h4 {
   height: 6px;
   border-radius: 999px;
   background: var(--surface-2);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.24),
+    inset 0 0 0 1px var(--border);
   outline: none;
   cursor: pointer;
 }
@@ -442,27 +490,35 @@ h4 {
 .roi-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  height: 22px;
-  width: 22px;
+  height: 18px;
+  width: 18px;
   border-radius: 999px;
-  background: linear-gradient(180deg, #ff8838, #e55a00);
+  background: radial-gradient(circle at 50% 32%, #ffc591, #ff8838 45%, #e55a00 100%);
   border: 2px solid var(--bg);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    0 4px 12px -2px rgba(216, 87, 6, 0.55);
-  transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.3, 1);
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    0 0 0 1px rgba(216, 87, 6, 0.5),
+    0 3px 9px -2px rgba(216, 87, 6, 0.55);
+  cursor: grab;
+  transition:
+    transform 0.2s cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 0.2s ease;
 }
 
 .roi-slider::-moz-range-thumb {
-  height: 22px;
-  width: 22px;
+  height: 18px;
+  width: 18px;
   border-radius: 999px;
-  background: linear-gradient(180deg, #ff8838, #e55a00);
+  background: radial-gradient(circle at 50% 32%, #ffc591, #ff8838 45%, #e55a00 100%);
   border: 2px solid var(--bg);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    0 4px 12px -2px rgba(216, 87, 6, 0.55);
-  transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.3, 1);
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    0 0 0 1px rgba(216, 87, 6, 0.5),
+    0 3px 9px -2px rgba(216, 87, 6, 0.55);
+  cursor: grab;
+  transition:
+    transform 0.2s cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 0.2s ease;
 }
 
 .roi-slider::-moz-range-track {
@@ -471,52 +527,73 @@ h4 {
 
 .roi-slider:hover::-webkit-slider-thumb {
   transform: scale(1.12);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    0 0 0 1px rgba(216, 87, 6, 0.55),
+    0 0 0 5px var(--flame-glow),
+    0 5px 14px -3px rgba(216, 87, 6, 0.65);
 }
 .roi-slider:active::-webkit-slider-thumb {
   transform: scale(1.04);
+  cursor: grabbing;
 }
 .roi-slider:hover::-moz-range-thumb {
   transform: scale(1.12);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    0 0 0 1px rgba(216, 87, 6, 0.55),
+    0 0 0 5px var(--flame-glow),
+    0 5px 14px -3px rgba(216, 87, 6, 0.65);
 }
 .roi-slider:active::-moz-range-thumb {
   transform: scale(1.04);
+  cursor: grabbing;
 }
 
 .roi-slider:focus-visible {
-  box-shadow: 0 0 0 3px var(--flame-glow);
+  outline: 2px solid var(--flame);
+  outline-offset: 4px;
 }
 
 /* ------------------------------------------------------------------ */
-/* Reduced motion: kill marquee, sheen, pulse, smooth scroll           */
+/* Reduced motion — OPT-IN on the site, NOT the OS setting.            */
+/* Animations play on every device by default. A future on-site        */
+/* "reduce motion" toggle sets data-reduce-motion="true" on <html>;    */
+/* only then are the marquee / sheen / pulse / smooth-scroll calmed.    */
+/* We deliberately avoid @media (prefers-reduced-motion) so an OS-level */
+/* flag can't silently disable the site's motion (which is exactly     */
+/* what was breaking the marquee + reveals on mobile).                 */
 /* ------------------------------------------------------------------ */
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  .marquee-track {
-    animation: none;
-    flex-wrap: wrap;
-    width: auto;
-    justify-content: center;
-  }
-  .marquee {
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-  .play-ring {
-    animation: none;
-    opacity: 0;
-  }
-  .btn-primary:hover::after {
-    animation: none;
-    opacity: 0;
-  }
-  *,
-  *::before,
-  *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-  }
+html[data-reduce-motion="true"] {
+  scroll-behavior: auto;
+}
+html[data-reduce-motion="true"] .marquee-track {
+  animation: none;
+  flex-wrap: wrap;
+  width: auto;
+  justify-content: center;
+}
+html[data-reduce-motion="true"] .marquee {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+html[data-reduce-motion="true"] .play-ring {
+  animation: none;
+  opacity: 0;
+}
+html[data-reduce-motion="true"] .btn-primary:hover::after,
+html[data-reduce-motion="true"] .btn-secondary:hover::after {
+  animation: none;
+  opacity: 0;
+}
+html[data-reduce-motion="true"] .surface-card-lift {
+  transform: none;
+}
+html[data-reduce-motion="true"] *,
+html[data-reduce-motion="true"] *::before,
+html[data-reduce-motion="true"] *::after {
+  transition-duration: 0.01ms !important;
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
 }

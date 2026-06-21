@@ -91,7 +91,7 @@ export function Pricing() {
             <div
               className={`surface-card surface-card-lift relative flex h-full flex-col rounded-card p-7 ${
                 tier.featured
-                  ? "border-flame/50 lg:-translate-y-3 lg:hover:-translate-y-[31px]"
+                  ? "border-flame/50 lg:![--lift:-12px] lg:hover:![--lift:-31px]"
                   : ""
               }`}
             >

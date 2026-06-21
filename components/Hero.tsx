@@ -3,13 +3,12 @@
 import { useRef } from "react";
 import {
   motion,
-  useReducedMotion,
   useScroll,
   useTransform,
   type Variants,
 } from "framer-motion";
+import { useReduceMotion } from "@/lib/useReduceMotion";
 import { BookCallButton, SecondaryButton } from "@/components/ui/Buttons";
-import { Magnetic } from "@/components/ui/Magnetic";
 import { scrollToId } from "@/components/SmoothScroll";
 
 const ease = [0.2, 0.7, 0.3, 1] as const;
@@ -18,7 +17,7 @@ const LINE1 = ["Your", "business", "isn’t", "disorganized."];
 const LINE2 = ["Your", "systems", "are."];
 
 export function Hero() {
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
   const ref = useRef<HTMLElement>(null);
 
   // Scroll-linked parallax — the hero gracefully drifts + fades as you leave it.
@@ -95,7 +94,7 @@ export function Hero() {
 
         {/* dominant headline with word-stagger reveal */}
         {reduce ? (
-          <h1 className="mt-8 max-w-[15ch] font-display text-[clamp(2.8rem,7.2vw,5.1rem)] font-semibold leading-[1.04] tracking-[-0.025em] text-heading">
+          <h1 className="mt-8 max-w-[15ch] font-display text-[clamp(2.5rem,7.2vw,5.1rem)] font-semibold leading-[1.04] tracking-[-0.025em] text-heading">
             Your business isn&rsquo;t disorganized.{" "}
             <span className="gradient-text">Your systems are.</span>
           </h1>
@@ -105,7 +104,7 @@ export function Hero() {
             initial="hidden"
             animate="show"
             aria-label="Your business isn’t disorganized. Your systems are."
-            className="mt-8 max-w-[15ch] font-display text-[clamp(2.8rem,7.2vw,5.1rem)] font-semibold leading-[1.04] tracking-[-0.025em] text-heading"
+            className="mt-8 max-w-[15ch] font-display text-[clamp(2.5rem,7.2vw,5.1rem)] font-semibold leading-[1.04] tracking-[-0.025em] text-heading"
           >
             <span className="inline-block" aria-hidden>
               {LINE1.map((w, i) => (
@@ -143,9 +142,7 @@ export function Hero() {
           {...item(1.05)}
           className="mt-9 flex flex-wrap items-center justify-center gap-3"
         >
-          <Magnetic strength={0.35} className="inline-flex">
-            <BookCallButton size="md" />
-          </Magnetic>
+          <BookCallButton size="md" />
           <SecondaryButton size="md" onClick={() => scrollToId("#video")}>
             <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden>
               <path d="M2.5 1.5l8 4.5-8 4.5v-9z" fill="currentColor" />

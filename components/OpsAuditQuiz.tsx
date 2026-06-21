@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useReduceMotion } from "@/lib/useReduceMotion";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { BookCallButton, SecondaryButton } from "@/components/ui/Buttons";
@@ -88,7 +89,7 @@ export function OpsAuditQuiz() {
   const [stage, setStage] = useState<Stage>("intro");
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<boolean[]>([]);
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
 
   const answer = (yes: boolean) => {
     const next = [...answers, yes];

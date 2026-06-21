@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { animate, useInView, useReducedMotion } from "framer-motion";
+import { animate, useInView } from "framer-motion";
+import { useReduceMotion } from "@/lib/useReduceMotion";
 
 type CountUpProps = {
   to: number;
@@ -21,7 +22,7 @@ export function CountUp({
 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
   const [value, setValue] = useState(0);
 
   useEffect(() => {

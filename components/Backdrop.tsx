@@ -118,7 +118,10 @@ export function Backdrop() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Site-level opt-in (data-reduce-motion="true" on <html>), NOT the OS
+    // prefers-reduced-motion setting — so the animated backdrop keeps running
+    // and follows theme toggles on every device by default.
+    const reduce = document.documentElement.dataset.reduceMotion === "true";
     const gl = canvas.getContext("webgl2", {
       antialias: false,
       alpha: false,

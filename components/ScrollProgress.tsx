@@ -1,10 +1,11 @@
 "use client";
 
-import { motion, useScroll, useSpring, useReducedMotion } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
+import { useReduceMotion } from "@/lib/useReduceMotion";
 
 /** Thin Flame progress bar pinned to the top of the viewport. */
 export function ScrollProgress() {
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 140,

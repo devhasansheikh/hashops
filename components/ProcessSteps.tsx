@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { animate, motion, useInView, useReducedMotion } from "framer-motion";
+import { animate, motion, useInView } from "framer-motion";
+import { useReduceMotion } from "@/lib/useReduceMotion";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { Reveal } from "@/components/ui/Reveal";
 import { BookCallButton } from "@/components/ui/Buttons";
-import { Magnetic } from "@/components/ui/Magnetic";
 
 const ease = [0.2, 0.7, 0.3, 1] as const;
 
@@ -588,7 +588,7 @@ function StepHeader({ index }: { index: number }) {
 }
 
 export function ProcessSteps() {
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
   const gridRef = useRef<HTMLDivElement>(null);
   const inView = useInView(gridRef, { margin: "-10% 0px -10% 0px" });
   const play = inView && !reduce;
@@ -597,7 +597,7 @@ export function ProcessSteps() {
     <section id="process" className="relative px-5 py-24 sm:px-8">
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/3 h-[55%] w-[min(900px,100vw)] -translate-x-1/2 -translate-y-1/2"
+        className="pointer-events-none absolute left-1/2 top-1/3 h-[55%] w-[min(900px,100%)] -translate-x-1/2 -translate-y-1/2"
         style={{
           background:
             "radial-gradient(ellipse at center, var(--flame-glow), transparent 72%)",
@@ -662,9 +662,7 @@ export function ProcessSteps() {
           It starts with the free Ops Strategy Call — the audit, run live on your
           business in 60 minutes.
         </p>
-        <Magnetic strength={0.35} className="inline-flex">
-          <BookCallButton size="md" />
-        </Magnetic>
+        <BookCallButton size="md" />
       </Reveal>
     </section>
   );

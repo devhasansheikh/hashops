@@ -22,7 +22,8 @@ export function scrollToId(id: string) {
 
 export function SmoothScroll() {
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Honor an explicit on-site reduced-motion opt-in, not the OS setting.
+    if (document.documentElement.dataset.reduceMotion === "true") return;
 
     const lenis = new Lenis({
       duration: 1.1,

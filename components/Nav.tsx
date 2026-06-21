@@ -34,17 +34,17 @@ export function Nav() {
             : "border-b border-transparent bg-transparent"
         }`}
       >
-        <div className="mx-auto flex h-[66px] max-w-wide items-center justify-between px-5 sm:px-8">
+        <div className="mx-auto grid h-[66px] max-w-wide grid-cols-[1fr_auto_1fr] items-center px-5 sm:px-8">
           <a
             href="#top"
             onClick={(e) => go(e, "#top")}
             aria-label="HASH — back to top"
-            className="transition-opacity hover:opacity-80"
+            className="justify-self-start transition-opacity hover:opacity-80"
           >
             <Lockup height={26} />
           </a>
 
-          <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
+          <nav className="hidden items-center gap-7 justify-self-center lg:flex" aria-label="Primary">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
@@ -58,7 +58,7 @@ export function Nav() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 justify-self-end">
             <ThemeToggle />
             <div className="hidden sm:block">
               <BookCallButton size="sm" label="Book a call" />
