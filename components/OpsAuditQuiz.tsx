@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { useReduceMotion } from "@/lib/useReduceMotion";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
@@ -126,6 +126,26 @@ export function OpsAuditQuiz() {
     transition: { duration: 0.32, ease },
   };
 
+  // Per-question: the block slides in from the right while its contents
+  // (label → question → answers) stagger up with a soft blur; slides left on exit.
+  const qParent: Variants = reduce
+    ? { initial: {}, animate: {}, exit: {} }
+    : {
+        initial: { x: 44 },
+        animate: {
+          x: 0,
+          transition: { duration: 0.4, ease, staggerChildren: 0.08, delayChildren: 0.05 },
+        },
+        exit: { opacity: 0, x: -44, filter: "blur(6px)", transition: { duration: 0.28, ease } },
+      };
+
+  const qItem: Variants = reduce
+    ? { initial: {}, animate: {} }
+    : {
+        initial: { opacity: 0, y: 18, filter: "blur(6px)" },
+        animate: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease } },
+      };
+
   return (
     <section id="audit" className="relative px-5 py-24 sm:px-8">
       {/* quiet radial glow behind the console */}
@@ -211,14 +231,30 @@ export function OpsAuditQuiz() {
               )}
 
               {stage === "quiz" && (
-                <motion.div key={`q-${index}`} {...fade} className="text-center">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-flametext">
+                <motion.div
+                  key={`q-${index}`}
+                  variants={qParent}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className="text-center"
+                >
+                  <motion.p
+                    variants={qItem}
+                    className="font-mono text-[11px] uppercase tracking-[0.16em] text-flametext"
+                  >
                     Layer 0{index + 1} / 07 · {LAYERS[index].name}
-                  </p>
-                  <h3 className="mx-auto mt-5 min-h-[96px] max-w-xl font-display text-[clamp(1.25rem,2.6vw,1.6rem)] font-semibold leading-snug text-heading">
+                  </motion.p>
+                  <motion.h3
+                    variants={qItem}
+                    className="mx-auto mt-5 min-h-[96px] max-w-xl font-display text-[clamp(1.25rem,2.6vw,1.6rem)] font-semibold leading-snug text-heading"
+                  >
                     {LAYERS[index].question}
-                  </h3>
-                  <div className="mx-auto mt-8 grid max-w-md grid-cols-2 gap-3">
+                  </motion.h3>
+                  <motion.div
+                    variants={qItem}
+                    className="mx-auto mt-8 grid max-w-md grid-cols-2 gap-3"
+                  >
                     <button
                       onClick={() => answer(true)}
                       className="rounded-btn border border-strong py-4 font-display text-[15px] font-medium text-heading transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:border-flame hover:bg-[var(--flame-glow)] active:scale-[0.985]"
@@ -231,10 +267,7 @@ export function OpsAuditQuiz() {
                     >
                       No
                     </button>
-                  </div>
-                  <p className="mt-7 font-mono text-[11px] text-muted">
-                    {index + 1} of 7
-                  </p>
+                  </motion.div>
                 </motion.div>
               )}
 
@@ -245,7 +278,14 @@ export function OpsAuditQuiz() {
                       Diagnosis
                     </p>
                     <p className="mt-4 font-display text-[clamp(2.2rem,5vw,3rem)] font-bold leading-none tracking-[-0.02em]">
-                      <span className="gradient-text">{reds}</span>
+                      <motion.span
+                        className="gradient-text inline-block"
+                        initial={reduce ? undefined : { scale: 0.5, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.55, ease, delay: 0.08 }}
+                      >
+                        {reds}
+                      </motion.span>
                       <span className="text-muted"> / 7</span>
                     </p>
                     <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
@@ -308,10 +348,30 @@ export function OpsAuditQuiz() {
                       <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted">
                         Where it&apos;s leaking
                       </p>
-                      <div className="mt-3 flex flex-col">
+                      <motion.div
+                        className="mt-3 flex flex-col"
+                        initial={reduce ? undefined : "hidden"}
+                        animate="show"
+                        variants={{
+                          hidden: {},
+                          show: { transition: { staggerChildren: 0.08, delayChildren: 0.12 } },
+                        }}
+                      >
                         {flagged.map((layer) => (
-                          <div
+                          <motion.div
                             key={layer.name}
+                            variants={
+                              reduce
+                                ? undefined
+                                : {
+                                    hidden: { opacity: 0, x: -16 },
+                                    show: {
+                                      opacity: 1,
+                                      x: 0,
+                                      transition: { duration: 0.4, ease },
+                                    },
+                                  }
+                            }
                             className="flex items-start gap-3.5 border-t border-line py-3.5 first:border-0"
                           >
                             <svg
@@ -336,9 +396,9 @@ export function OpsAuditQuiz() {
                                 {layer.cost}
                               </p>
                             </div>
-                          </div>
+                          </motion.div>
                         ))}
-                      </div>
+                      </motion.div>
                     </div>
                   )}
 
@@ -373,6 +433,30 @@ export function OpsAuditQuiz() {
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {/* 7-layer segmented progress — each segment fills as you advance */}
+            {stage === "quiz" && (
+              <div
+                className="mt-10 flex items-center justify-center gap-1.5"
+                aria-hidden
+              >
+                {LAYERS.map((_, i) => (
+                  <span
+                    key={i}
+                    className="h-1.5 rounded-full transition-all duration-500 ease-premium"
+                    style={{
+                      width: i === index ? 26 : 9,
+                      background:
+                        i < index
+                          ? "var(--flame)"
+                          : i === index
+                            ? "linear-gradient(90deg, #E55A00, #FFA033)"
+                            : "var(--surface-2)",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </Reveal>
