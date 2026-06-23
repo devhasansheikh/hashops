@@ -13,8 +13,8 @@ import { scrollToId } from "@/components/SmoothScroll";
 
 const ease = [0.2, 0.7, 0.3, 1] as const;
 
-const LINE1 = ["Your", "business", "isn’t", "disorganized."];
-const LINE2 = ["Your", "systems", "are."];
+const LINE1 = ["Take", "on", "more", "clients"];
+const LINE2 = ["without", "it", "all", "breaking."];
 
 export function Hero() {
   const reduce = useReduceMotion();
@@ -94,35 +94,35 @@ export function Hero() {
 
         {/* dominant headline with word-stagger reveal */}
         {reduce ? (
-          <h1 className="mt-8 max-w-[15ch] font-display text-[clamp(2.5rem,7.2vw,5.1rem)] font-semibold leading-[1.04] tracking-[-0.025em] text-heading">
-            Your business isn&rsquo;t disorganized.{" "}
-            <span className="gradient-text">Your systems are.</span>
+          <h1 className="mt-8 max-w-[min(92vw,1000px)] font-display text-[clamp(2.5rem,7.2vw,5.1rem)] font-semibold leading-[1.04] tracking-[-0.025em] text-heading">
+            <span className="block">Take on more clients</span>
+            <span className="gradient-text block">without it all breaking.</span>
           </h1>
         ) : (
           <motion.h1
             variants={container}
             initial="hidden"
             animate="show"
-            aria-label="Your business isn’t disorganized. Your systems are."
-            className="mt-8 max-w-[15ch] font-display text-[clamp(2.5rem,7.2vw,5.1rem)] font-semibold leading-[1.04] tracking-[-0.025em] text-heading"
+            aria-label="Take on more clients without it all breaking."
+            className="mt-8 max-w-[min(92vw,1000px)] font-display text-[clamp(2.5rem,7.2vw,5.1rem)] font-semibold leading-[1.04] tracking-[-0.025em] text-heading"
           >
-            <span className="inline-block" aria-hidden>
+            <span className="block" aria-hidden>
               {LINE1.map((w, i) => (
                 <motion.span
                   key={`a${i}`}
                   variants={word}
-                  className="mr-[0.26em] inline-block"
+                  className="mr-[0.26em] inline-block last:mr-0"
                 >
                   {w}
                 </motion.span>
               ))}
-            </span>{" "}
-            <span className="inline-block" aria-hidden>
+            </span>
+            <span className="block" aria-hidden>
               {LINE2.map((w, i) => (
                 <motion.span
                   key={`b${i}`}
                   variants={word}
-                  className="gradient-text mr-[0.26em] inline-block"
+                  className="gradient-text mr-[0.26em] inline-block last:mr-0"
                 >
                   {w}
                 </motion.span>
@@ -135,7 +135,8 @@ export function Hero() {
           {...item(0.9)}
           className="mt-7 max-w-md font-body text-[16px] leading-relaxed text-bodystrong"
         >
-          Audit-first systems that scale your ops, not your headcount.
+          Audit-first systems that let you raise prices, onboard faster, and
+          run every client the same way, without adding headcount.
         </motion.p>
 
         <motion.div

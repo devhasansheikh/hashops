@@ -17,8 +17,8 @@ export function Footer() {
           <div>
             <Lockup height={34} />
             <p className="mt-4 max-w-xs text-[14.5px] leading-relaxed text-body">
-              Operational Systems for Service Businesses. Audit-first,
-              ROI-justified, documented, and built to last.
+              Systems that let businesses scale without the chaos.
+              Audit-first, ROI-justified, documented.
             </p>
           </div>
 

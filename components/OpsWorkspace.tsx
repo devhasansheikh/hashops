@@ -141,7 +141,7 @@ const VIEW_TITLES: Record<ViewKey, string> = {
   clients: "Clients",
   tasks: "Tasks",
   automations: "Automations",
-  report: "Bottleneck report",
+  report: "Leak report",
   sop: "SOP library",
 };
 
@@ -616,7 +616,7 @@ function ReportView() {
         Prepared by HASH · 7-layer diagnostic
       </p>
       <h4 className="mt-2 font-display text-[20px] font-semibold text-heading">
-        Bottleneck Report — Q2
+        Leak Report · Q2
       </h4>
       <div className="mt-4 space-y-3 text-[13px] leading-relaxed text-body">
         <p>

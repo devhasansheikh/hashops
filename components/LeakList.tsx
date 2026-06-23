@@ -24,8 +24,8 @@ const LEAKS = [
     ),
   },
   {
-    title: "You become the safety net",
-    desc: "Every exception lands on your desk. The business scales exactly as fast as your inbox.",
+    title: "Every client runs differently",
+    desc: "There's no single way work gets done, so quality swings and the founder re-checks everything.",
     icon: (
       <path d="M12 3l8 4v5c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V7l8-4zM12 8.5v4M12 16h.01" />
     ),

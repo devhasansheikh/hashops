@@ -539,7 +539,7 @@ type Step = {
 const STEPS: Step[] = [
   {
     title: "Audit",
-    desc: "A 7-day diagnostic across all seven layers of your operation. You get a written Bottleneck Report with your top three leaks costed in hours and dollars.",
+    desc: "A 7-day diagnostic across all seven layers of your operation. You get a written Leak Report with your top three leaks costed in hours and dollars.",
     Widget: ScanWidget,
   },
   {
@@ -609,11 +609,11 @@ export function ProcessSteps() {
         eyebrow="How it works"
         title={
           <>
-            Simple, smart, and{" "}
-            <span className="gradient-text">built to scale.</span>
+            From first audit to a team that{" "}
+            <span className="gradient-text">runs without you.</span>
           </>
         }
-        lead="Five steps from first diagnostic to a team that runs the system without you. No retainer pitch on day one — the audit decides what gets built."
+        lead="Five steps from the first diagnostic to a system your team runs on its own. No retainer pitch on day one. The audit decides what gets built."
       />
 
       <div

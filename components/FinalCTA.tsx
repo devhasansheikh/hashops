@@ -18,7 +18,7 @@ export function FinalCTA() {
         <p className="eyebrow">Last step</p>
         <h2 className="mt-4 font-display text-[clamp(2rem,4.6vw,3rem)] font-semibold leading-[1.1] tracking-[-0.018em] text-heading">
           Ready to stop losing money to{" "}
-          <span className="gradient-text">unclear operations?</span>
+          <span className="gradient-text">the way you run?</span>
         </h2>
         <p className="mt-5 text-[16px] text-bodystrong">
           20 minutes. A real audit. No slide deck.

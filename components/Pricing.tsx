@@ -3,11 +3,11 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { useCalendly } from "@/components/CalendlyModal";
-import { BOOK_CTA } from "@/lib/site";
 
 type Tier = {
   name: string;
   tag: string;
+  outcome: string;
   features: string[];
   cta: string;
   featured?: boolean;
@@ -15,40 +15,48 @@ type Tier = {
 
 const TIERS: Tier[] = [
   {
-    name: "The Audit",
-    tag: "Start here",
+    name: "The Fix",
+    tag: "Start focused",
+    outcome:
+      "For when one part of your delivery is clearly bleeding time or money, and you want it gone.",
     features: [
-      "60-min 7-layer diagnostic",
-      "Written Bottleneck Report",
-      "Top 3 bottlenecks costed",
-      "Fix-first roadmap",
+      "Live Ops Audit + your written Leak Report",
+      "The single highest-ROI system from the audit, built",
+      "Automations + AI agents where they actually pay off",
+      "Full documentation + team training",
+      "20-day post-launch support",
     ],
-    cta: "Book the audit call",
+    cta: "Book your Strategy Call",
   },
   {
     name: "The Build",
     tag: "Audit + build",
     featured: true,
+    outcome:
+      "The system your whole business runs on. Every client handled the same way, nothing dropped.",
     features: [
-      "Everything in The Audit",
-      "1–2 core systems built",
-      "Automations + AI agents",
+      "Everything in The Fix",
+      "2–3 connected systems: onboarding, delivery, pipeline, and reporting in one workspace",
+      "One place your whole team runs from, instead of scattered tools",
+      "AI agents + automations across the stack",
       "Full documentation + training",
-      "20-day support",
+      "30-day support",
     ],
-    cta: BOOK_CTA,
+    cta: "Book your Strategy Call",
   },
   {
     name: "Operate & Scale",
     tag: "Full partnership",
+    outcome:
+      "We build the whole operation, then keep it sharp as you grow, so scaling doesn't reintroduce the chaos.",
     features: [
       "Everything in The Build",
-      "Multi-system overhaul",
-      "Ongoing optimization retainer",
-      "Quarterly re-audits",
+      "Full multi-system build, end to end",
+      "Ongoing optimization retainer: we run and tighten it with you",
+      "Quarterly re-audits to catch new leaks as you grow",
       "Priority support",
     ],
-    cta: "Book a scoping call",
+    cta: "Book your Strategy Call",
   },
 ];
 
@@ -82,10 +90,33 @@ export function Pricing() {
         index="08"
         eyebrow="Engagements"
         title="Three ways to work with us."
-        lead="No menu of prices here, because the scope comes from your audit, not a package page."
       />
 
-      <div className="mx-auto mt-16 grid max-w-content items-stretch gap-5 lg:grid-cols-3">
+      <Reveal delay={0.08} className="mx-auto mt-8 max-w-2xl">
+        <div className="flex items-center justify-center gap-3 rounded-pill border border-strong bg-surface/70 px-5 py-3 text-center shadow-[0_10px_30px_-18px_rgba(0,0,0,0.55)] backdrop-blur-md">
+          <span
+            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
+            style={{ background: "linear-gradient(135deg, #FF8838, #E55A00)" }}
+            aria-hidden
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M4.5 12.5l5 5 10-11"
+                stroke="#fff"
+                strokeWidth="2.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+          <p className="text-[13.5px] font-medium leading-snug text-bodystrong sm:text-[14px]">
+            Every engagement begins with the Ops Audit, the diagnosis that scopes
+            the build.
+          </p>
+        </div>
+      </Reveal>
+
+      <div className="mx-auto mt-12 grid max-w-content items-stretch gap-5 lg:grid-cols-3">
         {TIERS.map((tier, i) => (
           <Reveal key={tier.name} delay={i * 0.1} className="h-full">
             <div
@@ -113,6 +144,9 @@ export function Pricing() {
               <h3 className="mt-2.5 font-display text-[22px] font-semibold text-heading">
                 {tier.name}
               </h3>
+              <p className="mt-3 text-[13.5px] leading-relaxed text-body">
+                {tier.outcome}
+              </p>
 
               <ul className="mt-6 flex flex-col gap-3">
                 {tier.features.map((feature) => (

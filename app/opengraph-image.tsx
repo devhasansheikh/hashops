@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "HASH — Operational Systems for Service Businesses";
+export const alt = "HASH — Take on more clients without the chaos";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -102,7 +102,7 @@ export default function OgImage() {
               letterSpacing: "-0.02em",
             }}
           >
-            Your business isn&apos;t disorganized.
+            Take on more clients
           </div>
           <div
             style={{
@@ -115,7 +115,7 @@ export default function OgImage() {
               color: "transparent",
             }}
           >
-            Your systems are.
+            without it all breaking.
           </div>
           <div
             style={{
@@ -125,7 +125,7 @@ export default function OgImage() {
               display: "flex",
             }}
           >
-            Operational Systems for Service Businesses · hashops.io
+            Audit-first systems for service businesses · hashops.io
           </div>
         </div>
       </div>

@@ -27,30 +27,30 @@ const jbMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "HASH — Operational Systems for Service Businesses",
+  title: "HASH — Take on more clients without the chaos",
   description:
-    "HASH builds the dashboards, automations, and Notion workspace architecture that let service businesses scale without scaling headcount. Audit-first, ROI-justified, documented.",
+    "Audit-first systems that let service businesses take on more clients without the chaos. Raise prices, onboard faster, and run every client the same way, without adding headcount.",
   keywords: [
-    "operational systems",
-    "business automation",
-    "Notion workspace",
+    "scale service business",
+    "business systems",
+    "automation for service businesses",
+    "client onboarding systems",
     "ops audit",
-    "service business operations",
-    "dashboards",
+    "AI agents for operations",
   ],
   openGraph: {
-    title: "HASH — Operational Systems for Service Businesses",
+    title: "HASH — Take on more clients without the chaos",
     description:
-      "Audit-first systems that scale your ops, not your headcount. Dashboards, automations, and workspace architecture for service businesses.",
+      "Audit-first systems that let you take on more clients without the chaos. Raise prices, onboard faster, and run every client the same way, without adding headcount.",
     url: SITE_URL,
     siteName: "HASH",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "HASH — Operational Systems for Service Businesses",
+    title: "HASH — Take on more clients without the chaos",
     description:
-      "Audit-first systems that scale your ops, not your headcount.",
+      "Audit-first systems that let you take on more clients without the chaos.",
   },
 };
 
