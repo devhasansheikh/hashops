@@ -58,4 +58,4 @@ export const BOOKING = {
 
 /** Public site origin, used to build absolute links in emails. */
 export const SITE_ORIGIN =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://hashops.io";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.hashops.io";
