@@ -71,7 +71,7 @@ const VERDICTS: { max: number; title: string; sub: string }[] = [
   },
   {
     max: 4,
-    title: "Your ops are straining.",
+    title: "Your systems are straining.",
     sub: "This is where growth stalls: every new client adds friction instead of margin. All of it is fixable.",
   },
   {
@@ -606,7 +606,7 @@ export function OpsAuditQuiz() {
                       How HASH fixes this
                     </p>
                     <p className="mt-2 text-[14px] leading-relaxed text-bodystrong">
-                      The Ops Strategy Call runs this exact framework on your
+                      The Strategy Call runs this exact framework on your
                       business, live: a 60-minute diagnostic across all 7
                       layers, a written Leak Report that puts a dollar
                       figure on your top 3 leaks, and a fix-first roadmap. If

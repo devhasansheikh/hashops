@@ -302,7 +302,7 @@ function BuildWidget({ play, reduce }: WidgetProps) {
           fontFamily="monospace"
           letterSpacing="0.5"
         >
-          OPS
+          CORE
         </text>
       </svg>
     </div>
@@ -659,7 +659,7 @@ export function ProcessSteps() {
         className="mx-auto mt-12 flex max-w-xl flex-col items-center gap-5 text-center"
       >
         <p className="text-[14.5px] leading-relaxed text-body">
-          It starts with the free Ops Strategy Call — the audit, run live on your
+          It starts with the Strategy Call, the audit run live on your
           business in 60 minutes.
         </p>
         <BookCallButton size="md" />

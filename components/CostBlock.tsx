@@ -120,7 +120,7 @@ export function CostBlock() {
         index="07"
         eyebrow="The math"
         title="Put your own numbers in."
-        lead="Manual ops never show up on an invoice. Set the two sliders to your reality and watch what they quietly cost you — before you've paid a single salary."
+        lead="Manual work never shows up on an invoice. Set the two sliders to your reality and watch what it quietly costs you, before you've paid a single salary."
       />
 
       <Reveal delay={0.12} scale={0.97} blur className="mx-auto mt-12 max-w-[820px]">
@@ -131,7 +131,7 @@ export function CostBlock() {
           {/* inputs */}
           <div className="grid gap-8 sm:grid-cols-2 sm:gap-10">
             <Slider
-              label="Hours / week lost to manual ops"
+              label="Hours / week lost to manual work"
               value={hours}
               min={1}
               max={40}
@@ -187,7 +187,7 @@ export function CostBlock() {
           </p>
 
           <p className="mt-5 text-center font-mono text-[10.5px] text-muted">
-            Estimate only · hours/week × rate × 52 weeks. The Ops Audit replaces
+            Estimate only · hours/week × rate × 52 weeks. The Audit replaces
             this guess with your real numbers.
           </p>
         </div>

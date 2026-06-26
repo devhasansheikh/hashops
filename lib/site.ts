@@ -10,7 +10,7 @@ export const SITE_NAME = "HASH";
 export const CONTACT_EMAIL = "info@hashops.io";
 
 /** Primary CTA label, used across the site (nav shortens to "Book a call"). */
-export const BOOK_CTA = "Book your Ops Strategy Call";
+export const BOOK_CTA = "Book your Strategy Call";
 
 export const NAV_LINKS = [
   { label: "Services", href: "#system" },

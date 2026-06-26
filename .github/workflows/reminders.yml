@@ -1,0 +1,24 @@
+name: Booking reminders
+
+# Free hourly scheduler (GitHub Actions is unlimited on public repos). Pings the
+# secured cron route, which sends 24h + 1h reminder emails for upcoming calls.
+# Note: GitHub may delay scheduled runs under load, and disables schedules after
+# ~60 days of repo inactivity — re-enable from the Actions tab if that happens.
+
+on:
+  schedule:
+    - cron: "0 * * * *" # top of every hour, UTC
+  workflow_dispatch: {} # allow manual runs from the Actions tab
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger reminder send
+        run: |
+          curl -fsS --retry 2 -X POST \
+            "${SITE_URL%/}/api/cron/reminders" \
+            -H "Authorization: Bearer ${CRON_SECRET}"
+        env:
+          SITE_URL: ${{ secrets.SITE_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}

@@ -20,7 +20,7 @@ const TIERS: Tier[] = [
     outcome:
       "For when one part of your delivery is clearly bleeding time or money, and you want it gone.",
     features: [
-      "Live Ops Audit + your written Leak Report",
+      "Live Audit + your written Leak Report",
       "The single highest-ROI system from the audit, built",
       "Automations + AI agents where they actually pay off",
       "Full documentation + team training",
@@ -110,7 +110,7 @@ export function Pricing() {
             </svg>
           </span>
           <p className="text-[13.5px] font-medium leading-snug text-bodystrong sm:text-[14px]">
-            Every engagement begins with the Ops Audit, the diagnosis that scopes
+            Every engagement begins with the Audit, the diagnosis that scopes
             the build.
           </p>
         </div>

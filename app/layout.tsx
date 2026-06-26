@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     "business systems",
     "automation for service businesses",
     "client onboarding systems",
-    "ops audit",
+    "business audit",
     "AI agents for operations",
   ],
   openGraph: {
