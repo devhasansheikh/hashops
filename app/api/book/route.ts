@@ -17,6 +17,7 @@ import {
   isUniqueViolation,
   REVENUE_LABELS,
   hostNotifyEmail,
+  googleCalendarAddUrl,
 } from "@/lib/booking/helpers";
 import { leakPhrase } from "@/lib/booking/quiz";
 import { sendEmail } from "@/lib/email/resend";
@@ -165,12 +166,20 @@ export async function POST(req: Request) {
   const whenHost = formatWhen(slotStartUtc, BOOKING.hostTimezone);
   const { rescheduleUrl, cancelUrl } = manageUrls(bookingId);
 
+  const addToCalUrl = googleCalendarAddUrl({
+    title: "Strategy Call with HASH",
+    startUtcISO: slotStartUtc,
+    endUtcISO: slotEndUtc,
+    details: meetUrl ? `Join with Google Meet: ${meetUrl}` : "Your HASH Strategy Call.",
+    location: meetUrl || undefined,
+  });
   const mail = confirmationEmail({
     name: firstName(input.fullName),
     whenText: whenClient,
     meetUrl,
     rescheduleUrl,
     cancelUrl,
+    addToCalUrl,
   });
   await sendEmail({ to: input.email, subject: mail.subject, html: mail.html });
 

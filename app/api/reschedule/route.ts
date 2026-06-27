@@ -22,6 +22,7 @@ import {
   isUniqueViolation,
   REVENUE_LABELS,
   hostNotifyEmail,
+  googleCalendarAddUrl,
 } from "@/lib/booking/helpers";
 import { sendEmail } from "@/lib/email/resend";
 import { rescheduledEmail, hostNotificationEmail } from "@/lib/email/templates";
@@ -127,12 +128,20 @@ export async function POST(req: Request) {
 
   const whenText = formatWhen(slotStartUtc, b.timezone);
   const { rescheduleUrl, cancelUrl } = manageUrls(b.id);
+  const addToCalUrl = googleCalendarAddUrl({
+    title: "Strategy Call with HASH",
+    startUtcISO: slotStartUtc,
+    endUtcISO: slotEndUtc,
+    details: b.meetUrl ? `Join with Google Meet: ${b.meetUrl}` : "Your HASH Strategy Call.",
+    location: b.meetUrl || undefined,
+  });
   const mail = rescheduledEmail({
     name: firstName(b.fullName),
     whenText,
     meetUrl: b.meetUrl,
     rescheduleUrl,
     cancelUrl,
+    addToCalUrl,
   });
   await sendEmail({ to: b.email, subject: mail.subject, html: mail.html });
 

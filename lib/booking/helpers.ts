@@ -12,6 +12,25 @@ export function firstName(full: string): string {
 export const hostNotifyEmail = () =>
   process.env.BOOKING_NOTIFY_EMAIL || process.env.EMAIL_REPLY_TO || "info@hashops.io";
 
+/** A one-click "Add to Google Calendar" link for the confirmation email. */
+export function googleCalendarAddUrl(args: {
+  title: string;
+  startUtcISO: string;
+  endUtcISO: string;
+  details?: string;
+  location?: string;
+}): string {
+  const fmt = (iso: string) => iso.replace(/[-:]/g, "").replace(/\.\d+/, "");
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: args.title,
+    dates: `${fmt(args.startUtcISO)}/${fmt(args.endUtcISO)}`,
+  });
+  if (args.details) params.set("details", args.details);
+  if (args.location) params.set("location", args.location);
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
 export function manageUrls(bookingId: string) {
   return {
     rescheduleUrl: `${SITE_ORIGIN}/booking/manage?token=${signActionToken(bookingId, "reschedule")}`,

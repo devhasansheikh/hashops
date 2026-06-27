@@ -101,7 +101,7 @@ export async function createEvent(args: {
   const cal = calendar();
   const res = await cal.events.insert({
     calendarId: BOOKING.calendarId,
-    sendUpdates: "all",
+    sendUpdates: "none",
     conferenceDataVersion: 1,
     requestBody: {
       summary: args.summary,
@@ -143,7 +143,7 @@ export async function updateEventTime(
   await cal.events.patch({
     calendarId: BOOKING.calendarId,
     eventId,
-    sendUpdates: "all",
+    sendUpdates: "none",
     requestBody: {
       start: { dateTime: startUtcISO, timeZone: "UTC" },
       end: { dateTime: endUtcISO, timeZone: "UTC" },
@@ -156,6 +156,6 @@ export async function deleteEvent(eventId: string): Promise<void> {
   await cal.events.delete({
     calendarId: BOOKING.calendarId,
     eventId,
-    sendUpdates: "all",
+    sendUpdates: "none",
   });
 }

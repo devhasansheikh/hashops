@@ -78,6 +78,7 @@ type Base = {
   meetUrl: string | null;
   rescheduleUrl: string;
   cancelUrl: string;
+  addToCalUrl?: string;
 };
 
 export function confirmationEmail(b: Base): { subject: string; html: string } {
@@ -86,6 +87,9 @@ export function confirmationEmail(b: Base): { subject: string; html: string } {
     p(`Hi ${b.name}, your Strategy Call is confirmed. We'll run the 7-layer audit live on your business and leave you with your top leaks costed, whether or not you ever work with us.`) +
     detailPanel(b.whenText, b.meetUrl) +
     (b.meetUrl ? button(b.meetUrl, "Join with Google Meet") : "") +
+    (b.addToCalUrl
+      ? `<p style="margin:14px 0 2px;font-size:13px">${link(b.addToCalUrl, "Add to your calendar &rarr;")}</p>`
+      : "") +
     p(`Come with a rough sense of your client count and what you charge. We'll turn that into a real number on the call.`) +
     manageLine(b.rescheduleUrl, b.cancelUrl);
   return {
@@ -116,6 +120,9 @@ export function rescheduledEmail(b: Base): { subject: string; html: string } {
     p(`Hi ${b.name}, your Strategy Call is now set for the new time below.`) +
     detailPanel(b.whenText, b.meetUrl) +
     (b.meetUrl ? button(b.meetUrl, "Join with Google Meet") : "") +
+    (b.addToCalUrl
+      ? `<p style="margin:14px 0 2px;font-size:13px">${link(b.addToCalUrl, "Add to your calendar &rarr;")}</p>`
+      : "") +
     manageLine(b.rescheduleUrl, b.cancelUrl);
   return {
     subject: `Updated: your call is now ${b.whenText}`,
