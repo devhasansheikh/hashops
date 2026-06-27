@@ -6,6 +6,8 @@ export type QuizStep = {
   id: keyof QuizAnswers;
   heading: string;
   options: QuizOption[];
+  multi?: boolean;
+  hint?: string;
 };
 
 export const QUIZ_STEPS: QuizStep[] = [
@@ -36,6 +38,8 @@ export const QUIZ_STEPS: QuizStep[] = [
   {
     id: "leak",
     heading: "Where's the most time or money leaking right now?",
+    multi: true,
+    hint: "Select all that apply",
     options: [
       { value: "onboarding", label: "Onboarding new clients eats too much time" },
       { value: "dropped", label: "Work slips through the cracks, balls get dropped" },
@@ -67,8 +71,13 @@ export const LEAK_PHRASES: Record<string, string> = {
   scattered: "work scattered across tools that don't talk to each other",
 };
 
-export function leakPhrase(leak: string): string {
-  return LEAK_PHRASES[leak] || "where time and money quietly leak out";
+export function leakPhrase(leak: string | string[]): string {
+  const arr = (Array.isArray(leak) ? leak : [leak]).filter(Boolean);
+  const phrases = arr.map((l) => LEAK_PHRASES[l]).filter(Boolean);
+  if (phrases.length === 0) return "where time and money quietly leak out";
+  if (phrases.length === 1) return phrases[0];
+  if (phrases.length === 2) return `${phrases[0]} and ${phrases[1]}`;
+  return `${phrases.slice(0, -1).join(", ")}, and ${phrases[phrases.length - 1]}`;
 }
 
 /**
@@ -86,5 +95,51 @@ export function qualify(a: QuizAnswers): Qualification {
 }
 
 export function quizComplete(a: Partial<QuizAnswers>): a is QuizAnswers {
-  return Boolean(a.businessType && a.teamSize && a.leak && a.urgency);
+  return Boolean(
+    a.businessType &&
+      a.teamSize &&
+      a.urgency &&
+      Array.isArray(a.leak) &&
+      a.leak.length > 0,
+  );
+}
+
+/* ----- Booking-details form options ----- */
+
+export const REVENUE_OPTIONS: QuizOption[] = [
+  { value: "under_300k", label: "Under $300K" },
+  { value: "300k_750k", label: "$300K – $750K" },
+  { value: "750k_1_5m", label: "$750K – $1.5M" },
+  { value: "1_5m_5m", label: "$1.5M – $5M" },
+  { value: "5m_plus", label: "$5M+" },
+];
+
+export const TOOLS_OPTIONS: QuizOption[] = [
+  { value: "sheets", label: "Sheets" },
+  { value: "excel", label: "Excel" },
+  { value: "airtable", label: "Airtable" },
+  { value: "notion", label: "Notion" },
+  { value: "slack", label: "Slack" },
+  { value: "hubspot", label: "HubSpot" },
+];
+
+export const HEARD_OPTIONS: QuizOption[] = [
+  { value: "google", label: "Google search" },
+  { value: "linkedin", label: "LinkedIn" },
+  { value: "x", label: "X / Twitter" },
+  { value: "instagram", label: "Instagram" },
+  { value: "youtube", label: "YouTube" },
+  { value: "referral", label: "Referral / word of mouth" },
+  { value: "other", label: "Other" },
+];
+
+const labelMap = (opts: QuizOption[]): Record<string, string> =>
+  Object.fromEntries(opts.map((o) => [o.value, o.label]));
+
+export const REVENUE_LABELS = labelMap(REVENUE_OPTIONS);
+export const TOOL_LABELS = labelMap(TOOLS_OPTIONS);
+export const HEARD_LABELS = labelMap(HEARD_OPTIONS);
+
+export function toolLabels(values: string[]): string {
+  return values.map((v) => TOOL_LABELS[v] || v).join(", ");
 }

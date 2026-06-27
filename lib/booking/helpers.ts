@@ -1,7 +1,7 @@
 // Small server-side helpers shared by the booking routes.
 import { SITE_ORIGIN } from "./config";
 import { signActionToken } from "./tokens";
-import { leakPhrase } from "./quiz";
+import { leakPhrase, REVENUE_LABELS, HEARD_LABELS, toolLabels } from "./quiz";
 import type { QuizAnswers } from "./types";
 
 export function firstName(full: string): string {
@@ -39,39 +39,38 @@ export function manageUrls(bookingId: string) {
   };
 }
 
-export const REVENUE_LABELS: Record<string, string> = {
-  under_300k: "Under $300K",
-  "300k_1m": "$300K–$1M",
-  "1m_5m": "$1M–$5M",
-  "5m_plus": "$5M+",
-  prefer_not: "Prefer not to say",
-};
-
 export function buildEventDescription(input: {
   fullName: string;
   email: string;
-  whatsapp: string;
+  phone: string;
   company?: string | null;
   revenueRange?: string | null;
-  notes?: string | null;
+  tools?: string[] | null;
+  howHeard?: string | null;
+  oneThing?: string | null;
   quiz: QuizAnswers;
 }): string {
   const lines = [
-    "Strategy Call — booked via hashops.io",
+    "Strategy Call, booked via hashops.io",
     "",
     `Name: ${input.fullName}`,
     `Email: ${input.email}`,
-    `WhatsApp: ${input.whatsapp}`,
+    `Phone: ${input.phone}`,
   ];
-  if (input.company) lines.push(`Company: ${input.company}`);
+  if (input.company)
+    lines.push(`Company / Website / LinkedIn: ${input.company}`);
   if (input.revenueRange)
     lines.push(`Revenue: ${REVENUE_LABELS[input.revenueRange] ?? input.revenueRange}`);
+  if (input.tools && input.tools.length)
+    lines.push(`Tools: ${toolLabels(input.tools)}`);
+  if (input.howHeard)
+    lines.push(`Heard via: ${HEARD_LABELS[input.howHeard] ?? input.howHeard}`);
   lines.push(
     "",
-    `Biggest leak: ${leakPhrase(input.quiz.leak)}`,
+    `Biggest leaks: ${leakPhrase(input.quiz.leak)}`,
     `Business: ${input.quiz.businessType} · Team: ${input.quiz.teamSize} · Urgency: ${input.quiz.urgency}`,
   );
-  if (input.notes) lines.push("", `Notes: ${input.notes}`);
+  if (input.oneThing) lines.push("", `One thing to fix: ${input.oneThing}`);
   return lines.join("\n");
 }
 

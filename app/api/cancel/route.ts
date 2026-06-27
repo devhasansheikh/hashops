@@ -6,11 +6,10 @@ import { BOOKING } from "@/lib/booking/config";
 import { verifyActionToken } from "@/lib/booking/tokens";
 import { deleteEvent, googleConfigured } from "@/lib/booking/google";
 import { formatWhen } from "@/lib/booking/format";
-import { leakPhrase } from "@/lib/booking/quiz";
+import { leakPhrase, REVENUE_LABELS } from "@/lib/booking/quiz";
 import {
   firstName,
   manageUrls,
-  REVENUE_LABELS,
   hostNotifyEmail,
 } from "@/lib/booking/helpers";
 import { sendEmail } from "@/lib/email/resend";
@@ -70,9 +69,9 @@ export async function POST(req: Request) {
     kind: "cancelled",
     clientName: b.fullName,
     clientEmail: b.email,
-    whatsapp: b.whatsapp,
+    phone: b.whatsapp,
     company: b.company || undefined,
-    revenueLabel: b.revenueRange ? REVENUE_LABELS[b.revenueRange] : undefined,
+    revenueLabel: b.revenueRange ? REVENUE_LABELS[b.revenueRange] ?? b.revenueRange : undefined,
     leak: leakPhrase(b.quiz.leak),
     whenText: formatWhen(b.slotStartUtc.toISOString(), BOOKING.hostTimezone),
     meetUrl: null,

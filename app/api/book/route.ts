@@ -15,11 +15,15 @@ import {
   manageUrls,
   buildEventDescription,
   isUniqueViolation,
-  REVENUE_LABELS,
   hostNotifyEmail,
   googleCalendarAddUrl,
 } from "@/lib/booking/helpers";
-import { leakPhrase } from "@/lib/booking/quiz";
+import {
+  leakPhrase,
+  REVENUE_LABELS,
+  HEARD_LABELS,
+  toolLabels,
+} from "@/lib/booking/quiz";
 import { sendEmail } from "@/lib/email/resend";
 import { confirmationEmail, hostNotificationEmail } from "@/lib/email/templates";
 import { sendWhatsApp } from "@/lib/booking/whatsapp";
@@ -31,15 +35,17 @@ const Input = z.object({
   slotStartUtc: z.string().datetime(),
   fullName: z.string().trim().min(1).max(120),
   email: z.string().trim().email().max(200),
-  whatsapp: z.string().trim().min(5).max(40),
-  company: z.string().trim().max(200).optional().default(""),
-  revenueRange: z.string().trim().max(40).optional().default(""),
-  notes: z.string().trim().max(1000).optional().default(""),
+  phone: z.string().trim().min(5).max(40),
+  company: z.string().trim().min(1).max(200),
+  revenueRange: z.string().trim().min(1).max(40),
+  tools: z.array(z.string().max(40)).min(1).max(20),
+  howHeard: z.string().trim().min(1).max(40),
+  oneThing: z.string().trim().max(1000).optional().default(""),
   timezone: z.string().trim().min(1).max(60),
   quiz: z.object({
     businessType: z.string(),
     teamSize: z.string(),
-    leak: z.string(),
+    leak: z.array(z.string()).min(1),
     urgency: z.string(),
   }),
 });
@@ -102,12 +108,12 @@ export async function POST(req: Request) {
       .values({
         fullName: input.fullName,
         email: input.email,
-        whatsapp: input.whatsapp,
-        company: input.company || null,
-        revenueRange: input.revenueRange || null,
+        whatsapp: input.phone,
+        company: input.company,
+        revenueRange: input.revenueRange,
         quiz: input.quiz,
         timezone: input.timezone,
-        notes: input.notes || null,
+        notes: input.oneThing || null,
         slotStartUtc: startDate,
         slotEndUtc: endDate,
         status: "confirmed",
@@ -138,7 +144,7 @@ export async function POST(req: Request) {
   let meetUrl: string | null = null;
   try {
     const ev = await createEvent({
-      summary: `Strategy Call — ${input.fullName}${input.company ? " · " + input.company : ""}`,
+      summary: `Strategy Call · ${input.fullName} · ${input.company}`,
       description: buildEventDescription(input),
       startUtcISO: slotStartUtc,
       endUtcISO: slotEndUtc,
@@ -187,9 +193,12 @@ export async function POST(req: Request) {
     kind: "new",
     clientName: input.fullName,
     clientEmail: input.email,
-    whatsapp: input.whatsapp,
-    company: input.company || undefined,
-    revenueLabel: input.revenueRange ? REVENUE_LABELS[input.revenueRange] : undefined,
+    phone: input.phone,
+    company: input.company,
+    revenueLabel: REVENUE_LABELS[input.revenueRange] ?? input.revenueRange,
+    tools: toolLabels(input.tools),
+    howHeard: HEARD_LABELS[input.howHeard] ?? input.howHeard,
+    oneThing: input.oneThing || undefined,
     leak: leakPhrase(input.quiz.leak),
     whenText: whenHost,
     meetUrl,
@@ -197,7 +206,7 @@ export async function POST(req: Request) {
   await sendEmail({ to: hostNotifyEmail(), subject: host.subject, html: host.html });
 
   await sendWhatsApp(
-    input.whatsapp,
+    input.phone,
     `You're booked with HASH for ${whenClient}.${meetUrl ? " Join: " + meetUrl : ""}`,
   );
 

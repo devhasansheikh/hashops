@@ -63,7 +63,7 @@ export function OptionCard({
       transition={{ delay: reduce ? 0 : 0.05 + index * 0.045, duration: 0.32, ease }}
       whileHover={reduce ? undefined : { y: -2 }}
       whileTap={reduce ? undefined : { scale: 0.985 }}
-      className={`group relative flex w-full items-center justify-between gap-3 overflow-hidden rounded-btn border py-3.5 pl-5 pr-4 text-left font-body text-[15px] transition-colors duration-200 ${
+      className={`group relative flex w-full items-center justify-between gap-3 overflow-hidden rounded-btn border py-3 pl-5 pr-4 text-left font-body text-[15px] transition-colors duration-200 ${
         selected
           ? "border-flame bg-[var(--flame-glow)] text-heading"
           : "border-strong bg-surface2/25 text-bodystrong hover:border-flame/55 hover:bg-surface2/60 hover:text-heading"
@@ -146,5 +146,33 @@ export function Notice({ children }: { children: React.ReactNode }) {
     <div className="rounded-card border border-line bg-surface2/40 px-5 py-6 text-center font-body text-[14.5px] leading-relaxed text-body">
       {children}
     </div>
+  );
+}
+
+/** Consistent back affordance used on every step. */
+export function BackButton({
+  onClick,
+  label = "Back",
+}: {
+  onClick: () => void;
+  label?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex items-center gap-1 font-body text-[13.5px] text-muted transition-colors hover:text-heading"
+    >
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path
+          d="M15 18l-6-6 6-6"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      {label}
+    </button>
   );
 }

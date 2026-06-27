@@ -16,7 +16,7 @@ const Input = z.object({
   quiz: z.object({
     businessType: z.string(),
     teamSize: z.string(),
-    leak: z.string(),
+    leak: z.array(z.string()),
     urgency: z.string(),
   }),
 });

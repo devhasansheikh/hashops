@@ -187,9 +187,12 @@ export function hostNotificationEmail(b: {
   kind: "new" | "rescheduled" | "cancelled";
   clientName: string;
   clientEmail: string;
-  whatsapp: string;
+  phone: string;
   company?: string;
   revenueLabel?: string;
+  tools?: string;
+  howHeard?: string;
+  oneThing?: string;
   leak: string;
   whenText: string;
   meetUrl: string | null;
@@ -203,10 +206,13 @@ export function hostNotificationEmail(b: {
   const rows = kvRows([
     ["Name", b.clientName],
     ["Email", b.clientEmail],
-    ["WhatsApp", b.whatsapp],
-    ["Company", b.company || ""],
+    ["Phone", b.phone],
+    ["Company / Site / LinkedIn", b.company || ""],
     ["Revenue", b.revenueLabel || ""],
-    ["Biggest leak", b.leak],
+    ["Tools", b.tools || ""],
+    ["Heard via", b.howHeard || ""],
+    ["Biggest leaks", b.leak],
+    ["One thing to fix", b.oneThing || ""],
   ]);
   const inner =
     h1(`${head}.`) +

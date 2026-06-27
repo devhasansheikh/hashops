@@ -15,12 +15,11 @@ import {
   busyWindow,
 } from "@/lib/booking/availability";
 import { formatWhen } from "@/lib/booking/format";
-import { leakPhrase } from "@/lib/booking/quiz";
+import { leakPhrase, REVENUE_LABELS } from "@/lib/booking/quiz";
 import {
   firstName,
   manageUrls,
   isUniqueViolation,
-  REVENUE_LABELS,
   hostNotifyEmail,
   googleCalendarAddUrl,
 } from "@/lib/booking/helpers";
@@ -149,9 +148,9 @@ export async function POST(req: Request) {
     kind: "rescheduled",
     clientName: b.fullName,
     clientEmail: b.email,
-    whatsapp: b.whatsapp,
+    phone: b.whatsapp,
     company: b.company || undefined,
-    revenueLabel: b.revenueRange ? REVENUE_LABELS[b.revenueRange] : undefined,
+    revenueLabel: b.revenueRange ? REVENUE_LABELS[b.revenueRange] ?? b.revenueRange : undefined,
     leak: leakPhrase(b.quiz.leak),
     whenText: formatWhen(slotStartUtc, BOOKING.hostTimezone),
     meetUrl: b.meetUrl,

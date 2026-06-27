@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Hanken_Grotesk, Jost, JetBrains_Mono } from "next/font/google";
 import { Providers } from "@/components/Providers";
 import { SITE_URL } from "@/lib/site";
+import "flag-icons/css/flag-icons.min.css";
 import "./globals.css";
 
 const hanken = Hanken_Grotesk({

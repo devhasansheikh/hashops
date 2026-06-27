@@ -4,7 +4,7 @@
 export type QuizAnswers = {
   businessType: string;
   teamSize: string;
-  leak: string;
+  leak: string[];
   urgency: string;
 };
 
@@ -29,10 +29,12 @@ export type BookingInput = {
   slotStartUtc: string;
   fullName: string;
   email: string;
-  whatsapp: string;
-  company?: string;
-  revenueRange?: RevenueRange;
-  notes?: string;
+  phone: string;
+  company: string;
+  revenueRange: string;
+  tools: string[];
+  howHeard: string;
+  oneThing?: string;
   timezone: string; // visitor's IANA timezone
   quiz: QuizAnswers;
 };
