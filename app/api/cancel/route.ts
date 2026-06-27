@@ -2,11 +2,19 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { db, dbConfigured, schema } from "@/lib/db/client";
+import { BOOKING } from "@/lib/booking/config";
 import { verifyActionToken } from "@/lib/booking/tokens";
 import { deleteEvent, googleConfigured } from "@/lib/booking/google";
-import { firstName, manageUrls } from "@/lib/booking/helpers";
+import { formatWhen } from "@/lib/booking/format";
+import { leakPhrase } from "@/lib/booking/quiz";
+import {
+  firstName,
+  manageUrls,
+  REVENUE_LABELS,
+  hostNotifyEmail,
+} from "@/lib/booking/helpers";
 import { sendEmail } from "@/lib/email/resend";
-import { cancelledEmail } from "@/lib/email/templates";
+import { cancelledEmail, hostNotificationEmail } from "@/lib/email/templates";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -56,7 +64,20 @@ export async function POST(req: Request) {
 
   const { rebookUrl } = manageUrls(b.id);
   const mail = cancelledEmail({ name: firstName(b.fullName), rebookUrl });
-  void sendEmail({ to: b.email, subject: mail.subject, html: mail.html });
+  await sendEmail({ to: b.email, subject: mail.subject, html: mail.html });
+
+  const host = hostNotificationEmail({
+    kind: "cancelled",
+    clientName: b.fullName,
+    clientEmail: b.email,
+    whatsapp: b.whatsapp,
+    company: b.company || undefined,
+    revenueLabel: b.revenueRange ? REVENUE_LABELS[b.revenueRange] : undefined,
+    leak: leakPhrase(b.quiz.leak),
+    whenText: formatWhen(b.slotStartUtc.toISOString(), BOOKING.hostTimezone),
+    meetUrl: null,
+  });
+  await sendEmail({ to: hostNotifyEmail(), subject: host.subject, html: host.html });
 
   return NextResponse.json({ ok: true });
 }

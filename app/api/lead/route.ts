@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db, dbConfigured, schema } from "@/lib/db/client";
-import { firstName } from "@/lib/booking/helpers";
+import { firstName, hostNotifyEmail } from "@/lib/booking/helpers";
+import { leakPhrase } from "@/lib/booking/quiz";
 import { sendEmail } from "@/lib/email/resend";
-import { nurtureEmail } from "@/lib/email/templates";
+import { nurtureEmail, hostLeadEmail } from "@/lib/email/templates";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -47,7 +48,17 @@ export async function POST(req: Request) {
   }
 
   const mail = nurtureEmail({ name: firstName(input.fullName) });
-  void sendEmail({ to: input.email, subject: mail.subject, html: mail.html });
+  await sendEmail({ to: input.email, subject: mail.subject, html: mail.html });
+
+  const host = hostLeadEmail({
+    name: input.fullName,
+    email: input.email,
+    leak: leakPhrase(input.quiz.leak),
+    business: input.quiz.businessType,
+    team: input.quiz.teamSize,
+    urgency: input.quiz.urgency,
+  });
+  await sendEmail({ to: hostNotifyEmail(), subject: host.subject, html: host.html });
 
   return NextResponse.json({ ok: true });
 }

@@ -164,3 +164,74 @@ export function nurtureEmail(b: { name: string }): { subject: string; html: stri
     html: layout("Run the 7-layer audit on your own business.", inner),
   };
 }
+
+function kvRows(pairs: [string, string][]): string {
+  return pairs
+    .filter(([, v]) => v)
+    .map(
+      ([k, v]) =>
+        `<tr><td style="padding:5px 0;color:${C.muted};font-size:13px;width:120px;vertical-align:top">${k}</td><td style="padding:5px 0;color:${C.body};font-size:14px">${v}</td></tr>`,
+    )
+    .join("");
+}
+
+/** Internal notification to the host when a booking is made/changed/cancelled. */
+export function hostNotificationEmail(b: {
+  kind: "new" | "rescheduled" | "cancelled";
+  clientName: string;
+  clientEmail: string;
+  whatsapp: string;
+  company?: string;
+  revenueLabel?: string;
+  leak: string;
+  whenText: string;
+  meetUrl: string | null;
+}): { subject: string; html: string } {
+  const head =
+    b.kind === "new"
+      ? "New booking"
+      : b.kind === "rescheduled"
+        ? "Booking rescheduled"
+        : "Booking cancelled";
+  const rows = kvRows([
+    ["Name", b.clientName],
+    ["Email", b.clientEmail],
+    ["WhatsApp", b.whatsapp],
+    ["Company", b.company || ""],
+    ["Revenue", b.revenueLabel || ""],
+    ["Biggest leak", b.leak],
+  ]);
+  const inner =
+    h1(`${head}.`) +
+    detailPanel(b.whenText, b.kind === "cancelled" ? null : b.meetUrl) +
+    `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:2px 0 6px">${rows}</table>` +
+    (b.kind === "cancelled" ? p("This slot is now free again.") : "");
+  return {
+    subject: `${head}: ${b.clientName} (${b.whenText})`,
+    html: layout(`${head}: ${b.clientName}`, inner),
+  };
+}
+
+/** Internal notification to the host when a nurture (checklist) lead comes in. */
+export function hostLeadEmail(b: {
+  name: string;
+  email: string;
+  leak: string;
+  business: string;
+  team: string;
+  urgency: string;
+}): { subject: string; html: string } {
+  const rows = kvRows([
+    ["Name", b.name],
+    ["Email", b.email],
+    ["Biggest leak", b.leak],
+    ["Business", b.business],
+    ["Team", b.team],
+    ["Urgency", b.urgency],
+  ]);
+  const inner =
+    h1("New checklist lead.") +
+    p("Someone not ready to book grabbed the 7-layer Leak Checklist:") +
+    `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:2px 0 6px">${rows}</table>`;
+  return { subject: `New lead: ${b.name}`, html: layout(`New lead: ${b.name}`, inner) };
+}

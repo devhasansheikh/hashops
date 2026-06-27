@@ -8,6 +8,10 @@ export function firstName(full: string): string {
   return full.trim().split(/\s+/)[0] || full.trim();
 }
 
+/** Where new-booking / lead notifications go (the host's inbox). */
+export const hostNotifyEmail = () =>
+  process.env.BOOKING_NOTIFY_EMAIL || process.env.EMAIL_REPLY_TO || "info@hashops.io";
+
 export function manageUrls(bookingId: string) {
   return {
     rescheduleUrl: `${SITE_ORIGIN}/booking/manage?token=${signActionToken(bookingId, "reschedule")}`,

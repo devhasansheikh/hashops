@@ -15,9 +15,16 @@ import {
   busyWindow,
 } from "@/lib/booking/availability";
 import { formatWhen } from "@/lib/booking/format";
-import { firstName, manageUrls, isUniqueViolation } from "@/lib/booking/helpers";
+import { leakPhrase } from "@/lib/booking/quiz";
+import {
+  firstName,
+  manageUrls,
+  isUniqueViolation,
+  REVENUE_LABELS,
+  hostNotifyEmail,
+} from "@/lib/booking/helpers";
 import { sendEmail } from "@/lib/email/resend";
-import { rescheduledEmail } from "@/lib/email/templates";
+import { rescheduledEmail, hostNotificationEmail } from "@/lib/email/templates";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -127,7 +134,20 @@ export async function POST(req: Request) {
     rescheduleUrl,
     cancelUrl,
   });
-  void sendEmail({ to: b.email, subject: mail.subject, html: mail.html });
+  await sendEmail({ to: b.email, subject: mail.subject, html: mail.html });
+
+  const host = hostNotificationEmail({
+    kind: "rescheduled",
+    clientName: b.fullName,
+    clientEmail: b.email,
+    whatsapp: b.whatsapp,
+    company: b.company || undefined,
+    revenueLabel: b.revenueRange ? REVENUE_LABELS[b.revenueRange] : undefined,
+    leak: leakPhrase(b.quiz.leak),
+    whenText: formatWhen(slotStartUtc, BOOKING.hostTimezone),
+    meetUrl: b.meetUrl,
+  });
+  await sendEmail({ to: hostNotifyEmail(), subject: host.subject, html: host.html });
 
   return NextResponse.json({ ok: true, slotStartUtc, slotEndUtc, whenText, meetUrl: b.meetUrl });
 }

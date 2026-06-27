@@ -15,9 +15,12 @@ import {
   manageUrls,
   buildEventDescription,
   isUniqueViolation,
+  REVENUE_LABELS,
+  hostNotifyEmail,
 } from "@/lib/booking/helpers";
+import { leakPhrase } from "@/lib/booking/quiz";
 import { sendEmail } from "@/lib/email/resend";
-import { confirmationEmail } from "@/lib/email/templates";
+import { confirmationEmail, hostNotificationEmail } from "@/lib/email/templates";
 import { sendWhatsApp } from "@/lib/booking/whatsapp";
 
 export const runtime = "nodejs";
@@ -155,20 +158,38 @@ export async function POST(req: Request) {
     );
   }
 
-  // 4) Confirmation email + optional WhatsApp — best-effort, never block success.
-  const whenText = formatWhen(slotStartUtc, input.timezone);
+  // 4) Emails — AWAITED. Fire-and-forget gets dropped when the serverless
+  //    function freezes after responding, so we wait for them. The helpers
+  //    catch their own errors, so these never throw / never fail the booking.
+  const whenClient = formatWhen(slotStartUtc, input.timezone);
+  const whenHost = formatWhen(slotStartUtc, BOOKING.hostTimezone);
   const { rescheduleUrl, cancelUrl } = manageUrls(bookingId);
+
   const mail = confirmationEmail({
     name: firstName(input.fullName),
-    whenText,
+    whenText: whenClient,
     meetUrl,
     rescheduleUrl,
     cancelUrl,
   });
-  void sendEmail({ to: input.email, subject: mail.subject, html: mail.html });
-  void sendWhatsApp(
+  await sendEmail({ to: input.email, subject: mail.subject, html: mail.html });
+
+  const host = hostNotificationEmail({
+    kind: "new",
+    clientName: input.fullName,
+    clientEmail: input.email,
+    whatsapp: input.whatsapp,
+    company: input.company || undefined,
+    revenueLabel: input.revenueRange ? REVENUE_LABELS[input.revenueRange] : undefined,
+    leak: leakPhrase(input.quiz.leak),
+    whenText: whenHost,
+    meetUrl,
+  });
+  await sendEmail({ to: hostNotifyEmail(), subject: host.subject, html: host.html });
+
+  await sendWhatsApp(
     input.whatsapp,
-    `You're booked with HASH for ${whenText}.${meetUrl ? " Join: " + meetUrl : ""}`,
+    `You're booked with HASH for ${whenClient}.${meetUrl ? " Join: " + meetUrl : ""}`,
   );
 
   return NextResponse.json({ ok: true, bookingId, slotStartUtc, slotEndUtc, meetUrl });
