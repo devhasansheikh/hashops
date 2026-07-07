@@ -20,12 +20,16 @@ export function VideoBlock() {
       <SectionHead
         index="01"
         eyebrow="See it in action"
-        title="Watch how HASH works."
+        title={
+          <>
+            Watch how HASH <span className="serif-accent gradient-text">works.</span>
+          </>
+        }
         lead="Ninety seconds on what we build, what it replaces, and when it pays for itself."
       />
 
       <Reveal delay={0.12} scale={0.95} blur className="mx-auto mt-12 max-w-[880px]">
-        <div className="surface-card surface-card-lift overflow-hidden rounded-window border-strong">
+        <div className="surface-card surface-card-lift overflow-hidden rounded-window">
           <div className="relative aspect-video">
             {VIDEO_MP4 ? (
               <video

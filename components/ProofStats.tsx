@@ -36,7 +36,12 @@ export function ProofStats() {
       <SectionHead
         index="06"
         eyebrow="Proof"
-        title="Built, shipped, measured."
+        title={
+          <>
+            Built, shipped,{" "}
+            <span className="serif-accent gradient-text">measured.</span>
+          </>
+        }
         lead="Two recent builds, with the numbers that mattered to the founder."
       />
 

@@ -18,11 +18,13 @@ import {
   OptionCard,
   ProgressBar,
   StepHeading,
+  AccentTail,
   Field,
   BackButton,
   inputClass,
   ease,
 } from "./parts";
+import { ArrowOrb } from "@/components/ui/ArrowOrb";
 import { Select } from "./Select";
 import { Chips } from "./Chips";
 import { PhoneField } from "./PhoneField";
@@ -309,7 +311,9 @@ export function BookingFlow({ onClose }: { onClose: () => void }) {
     },
   });
 
-  const cta = "btn-primary px-5 py-2.5 text-[13.5px] disabled:cursor-not-allowed";
+  const cta =
+    "btn-primary pl-5 pr-[7px] py-[7px] text-[13.5px] disabled:cursor-not-allowed";
+  const orb = <ArrowOrb className="!h-7 !w-7" />;
 
   return (
     <div>
@@ -334,7 +338,9 @@ export function BookingFlow({ onClose }: { onClose: () => void }) {
               <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.16em] text-flametext">
                 Step {step + 1} of {QUIZ_STEPS.length}
               </p>
-              <StepHeading>{current.heading}</StepHeading>
+              <StepHeading>
+                <AccentTail text={current.heading} />
+              </StepHeading>
               {current.hint && (
                 <p className="mt-1.5 font-body text-[13px] text-muted">{current.hint}</p>
               )}
@@ -353,6 +359,7 @@ export function BookingFlow({ onClose }: { onClose: () => void }) {
                 {step > 0 ? <BackButton onClick={back} /> : <span />}
                 <button type="button" onClick={next} disabled={!hasAnswer} className={`${cta} disabled:opacity-40`}>
                   {step < QUIZ_STEPS.length - 1 ? "Next" : "See my options"}
+                  {orb}
                 </button>
               </div>
             </div>
@@ -381,8 +388,9 @@ export function BookingFlow({ onClose }: { onClose: () => void }) {
                 </p>
               )}
 
-              <h3 className="mb-4 mt-6 font-display text-[18px] font-semibold text-heading">
-                Pick a time that works
+              <h3 className="mb-4 mt-6 font-display text-[19px] font-semibold tracking-[-0.01em] text-heading">
+                Pick a time{" "}
+                <span className="serif-accent gradient-text">that works.</span>
               </h3>
               <SlotPicker onPick={choose} selected={slot?.startUtc} slotsOverride={overrideSlots} />
             </div>
@@ -398,7 +406,12 @@ export function BookingFlow({ onClose }: { onClose: () => void }) {
               >
                 ← {whenLocal(slot.startUtc, tz)} · change
               </button>
-              <StepHeading>A few details and you&apos;re set</StepHeading>
+              <StepHeading>
+                A few details and{" "}
+                <span className="serif-accent gradient-text">
+                  you&apos;re set.
+                </span>
+              </StepHeading>
               <motion.div
                 className="mt-5 flex flex-col gap-4"
                 variants={stagger(0.06)}
@@ -499,6 +512,7 @@ export function BookingFlow({ onClose }: { onClose: () => void }) {
                   <BackButton onClick={back} />
                   <button type="button" onClick={submitBooking} disabled={submitting} className={`${cta} disabled:opacity-60`}>
                     {submitting ? "Booking…" : "Confirm my call"}
+                    {orb}
                   </button>
                 </motion.div>
                 {formError && (
@@ -560,8 +574,9 @@ export function BookingFlow({ onClose }: { onClose: () => void }) {
                 initial={reduce ? false : "hidden"}
                 animate="show"
               >
-                <motion.h3 variants={item} className="mt-4 font-display text-2xl font-semibold text-heading">
-                  You&apos;re booked.
+                <motion.h3 variants={item} className="mt-4 font-display text-[26px] font-semibold tracking-[-0.02em] text-heading">
+                  You&apos;re{" "}
+                  <span className="serif-accent gradient-text">booked.</span>
                 </motion.h3>
                 <motion.p variants={item} className="mt-3 max-w-sm font-body text-[15px] leading-relaxed text-body">
                   You&apos;re set for{" "}
@@ -571,8 +586,9 @@ export function BookingFlow({ onClose }: { onClose: () => void }) {
                 </motion.p>
                 <motion.div variants={item} className="mt-7 flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
                   {result.meetUrl && (
-                    <a href={result.meetUrl} target="_blank" rel="noopener noreferrer" className="btn-primary px-5 py-2.5 text-[13.5px]">
+                    <a href={result.meetUrl} target="_blank" rel="noopener noreferrer" className="btn-primary pl-5 pr-[7px] py-[7px] text-[13.5px]">
                       Join with Google Meet
+                      {orb}
                     </a>
                   )}
                   <button onClick={onClose} className="btn-secondary px-5 py-2.5 text-[13.5px]">
@@ -588,7 +604,10 @@ export function BookingFlow({ onClose }: { onClose: () => void }) {
             <div>
               <BackButton onClick={back} />
               <div className="mt-4">
-                <StepHeading>Not ready for a call?</StepHeading>
+                <StepHeading>
+                  Not ready for{" "}
+                  <span className="serif-accent gradient-text">a call?</span>
+                </StepHeading>
               </div>
               <p className="mt-3 font-body text-[15px] leading-relaxed text-body">
                 Grab the 7-layer Leak Checklist and run it on your own business.
@@ -628,6 +647,7 @@ export function BookingFlow({ onClose }: { onClose: () => void }) {
                 <motion.div variants={item}>
                   <button type="button" onClick={submitLead} disabled={leadSubmitting} className={`${cta} w-full disabled:opacity-60`}>
                     {leadSubmitting ? "Sending…" : "Send me the checklist"}
+                    {orb}
                   </button>
                 </motion.div>
               </motion.div>
@@ -657,8 +677,9 @@ export function BookingFlow({ onClose }: { onClose: () => void }) {
                 </svg>
               </motion.div>
               <motion.div className="flex flex-col items-center" variants={stagger(0.3)} initial={reduce ? false : "hidden"} animate="show">
-                <motion.h3 variants={item} className="mt-5 font-display text-2xl font-semibold text-heading">
-                  Check your inbox.
+                <motion.h3 variants={item} className="mt-5 font-display text-[26px] font-semibold tracking-[-0.02em] text-heading">
+                  Check your{" "}
+                  <span className="serif-accent gradient-text">inbox.</span>
                 </motion.h3>
                 <motion.p variants={item} className="mt-3 max-w-sm font-body text-[15px] leading-relaxed text-body">
                   Your 7-layer Leak Checklist is on its way. Run it honestly. When two

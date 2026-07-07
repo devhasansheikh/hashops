@@ -26,7 +26,7 @@ export function SectionHead({
         </p>
       </Reveal>
       <Reveal blur delay={0.08} className="mt-4">
-        <h2 className="font-display text-[clamp(1.85rem,4vw,2.7rem)] font-semibold leading-[1.12] tracking-[-0.015em] text-heading">
+        <h2 className="font-display text-[clamp(2.05rem,4.5vw,3.2rem)] font-semibold leading-[1.07] tracking-[-0.025em] text-heading">
           {title}
         </h2>
       </Reveal>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { SlotPicker } from "@/components/booking/SlotPicker";
 import { Notice } from "@/components/booking/parts";
+import { ArrowOrb } from "@/components/ui/ArrowOrb";
 import type { Slot } from "@/lib/booking/types";
 
 type Booking = {
@@ -114,7 +115,7 @@ export default function ManagePage() {
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease }}
-        className="surface-card w-full max-w-[560px] rounded-card border-strong p-7 sm:p-9"
+        className="surface-card w-full max-w-[560px] rounded-card p-7 sm:p-9"
       >
         <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.16em] text-flametext">
           Manage your call
@@ -136,8 +137,8 @@ export default function ManagePage() {
 
         {status === "cancelled" && (
           <div>
-            <h1 className="font-display text-2xl font-semibold text-heading">
-              This call is cancelled.
+            <h1 className="font-display text-[26px] font-semibold tracking-[-0.02em] text-heading">
+              This call is <span className="serif-accent">cancelled.</span>
             </h1>
             <p className="mt-3 font-body text-[15px] text-body">
               Want a new time?{" "}
@@ -151,8 +152,8 @@ export default function ManagePage() {
 
         {status === "done_cancel" && (
           <div>
-            <h1 className="font-display text-2xl font-semibold text-heading">
-              Your call is cancelled.
+            <h1 className="font-display text-[26px] font-semibold tracking-[-0.02em] text-heading">
+              Your call is <span className="serif-accent">cancelled.</span>
             </h1>
             <p className="mt-3 font-body text-[15px] text-body">
               The slot is freed up. Changed your mind?{" "}
@@ -166,8 +167,9 @@ export default function ManagePage() {
 
         {status === "done_reschedule" && (
           <div>
-            <h1 className="font-display text-2xl font-semibold text-heading">
-              Your call&apos;s been moved.
+            <h1 className="font-display text-[26px] font-semibold tracking-[-0.02em] text-heading">
+              Your call&apos;s been{" "}
+              <span className="serif-accent gradient-text">moved.</span>
             </h1>
             <p className="mt-3 font-body text-[15px] text-body">
               You&apos;re now set for{" "}
@@ -179,8 +181,15 @@ export default function ManagePage() {
 
         {status === "ready" && booking && (
           <div>
-            <h1 className="font-display text-[22px] font-semibold leading-snug text-heading">
-              {mode === "reschedule" ? "Pick a new time" : "Your call"}
+            <h1 className="font-display text-[24px] font-semibold leading-snug tracking-[-0.02em] text-heading">
+              {mode === "reschedule" ? (
+                <>
+                  Pick a{" "}
+                  <span className="serif-accent gradient-text">new time.</span>
+                </>
+              ) : (
+                "Your call"
+              )}
             </h1>
             <p className="mt-2 font-body text-[14.5px] text-body">
               Currently booked for{" "}
@@ -198,9 +207,10 @@ export default function ManagePage() {
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <button
                   onClick={() => setMode("reschedule")}
-                  className="btn-primary px-6 py-3 text-sm"
+                  className="btn-primary pl-6 pr-2 py-2 text-sm"
                 >
                   Reschedule
+                  <ArrowOrb className="!h-7 !w-7" />
                 </button>
                 <button
                   onClick={cancel}

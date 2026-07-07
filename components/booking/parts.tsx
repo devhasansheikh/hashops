@@ -30,9 +30,22 @@ export function ProgressBar({ value }: { value: number }) {
 
 export function StepHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="font-display text-[clamp(1.3rem,3.2vw,1.7rem)] font-semibold leading-snug tracking-[-0.012em] text-heading">
+    <h3 className="font-display text-[clamp(1.35rem,3.4vw,1.8rem)] font-semibold leading-[1.16] tracking-[-0.02em] text-heading [text-wrap:balance]">
       {children}
     </h3>
+  );
+}
+
+/** Heading string with its last `count` words in the serif italic accent. */
+export function AccentTail({ text, count = 2 }: { text: string; count?: number }) {
+  const words = text.trim().split(" ");
+  const head = words.slice(0, -count).join(" ");
+  const tail = words.slice(-count).join(" ");
+  return (
+    <>
+      {head ? `${head} ` : null}
+      <span className="serif-accent gradient-text">{tail}</span>
+    </>
   );
 }
 

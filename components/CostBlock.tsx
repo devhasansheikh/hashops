@@ -119,14 +119,18 @@ export function CostBlock() {
       <SectionHead
         index="07"
         eyebrow="The math"
-        title="Put your own numbers in."
+        title={
+          <>
+            Put <span className="serif-accent gradient-text">your own numbers</span> in.
+          </>
+        }
         lead="Manual work never shows up on an invoice. Set the two sliders to your reality and watch what it quietly costs you, before you've paid a single salary."
       />
 
       <Reveal delay={0.12} scale={0.97} blur className="mx-auto mt-12 max-w-[820px]">
         <div
           ref={ref}
-          className="surface-card overflow-hidden rounded-card border-strong p-6 shadow-[var(--window-shadow)] sm:p-10"
+          className="surface-card overflow-hidden rounded-card p-6 shadow-[var(--window-shadow)] sm:p-10"
         >
           {/* inputs */}
           <div className="grid gap-8 sm:grid-cols-2 sm:gap-10">

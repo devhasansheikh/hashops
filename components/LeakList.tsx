@@ -42,7 +42,8 @@ export function LeakList() {
           <>
             You&apos;re not losing time.
             <br />
-            You&apos;re losing money. <span className="gradient-text">Quietly.</span>
+            You&apos;re losing money.{" "}
+            <span className="serif-accent gradient-text">Quietly.</span>
           </>
         }
       />

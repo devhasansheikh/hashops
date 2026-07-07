@@ -1,21 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Hanken_Grotesk, Jost, JetBrains_Mono } from "next/font/google";
+import { Instrument_Sans, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { Providers } from "@/components/Providers";
 import { SITE_URL } from "@/lib/site";
 import "flag-icons/css/flag-icons.min.css";
 import "./globals.css";
 
-const hanken = Hanken_Grotesk({
+const sans = Instrument_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-hanken",
+  variable: "--font-sans",
   display: "swap",
 });
 
-const jost = Jost({
+const serif = Instrument_Serif({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-jost",
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-serif",
   display: "swap",
 });
 
@@ -70,13 +71,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${hanken.variable} ${jost.variable} ${jbMono.variable} font-body`}
+        className={`${sans.variable} ${serif.variable} ${jbMono.variable} font-body`}
       >
         {/* Preload the official logo assets so they show instantly in the
             intro loader and nav (React 19 hoists these to <head>). */}
         <link rel="preload" as="image" href="/hash-lockup.svg" />
         <link rel="preload" as="image" href="/hash-logo.svg" />
         <Providers>{children}</Providers>
+        {/* cinematic film grain over everything — breaks digital flatness */}
+        <div className="film-grain" aria-hidden />
+
       </body>
     </html>
   );

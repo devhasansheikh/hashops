@@ -720,7 +720,12 @@ export function OpsWorkspace() {
       <SectionHead
         index="03"
         eyebrow="The HASH Ops System™"
-        title="Your whole operation, in one workspace."
+        title={
+          <>
+            Your whole operation, in{" "}
+            <span className="serif-accent gradient-text">one workspace.</span>
+          </>
+        }
         lead="Pipeline, delivery, tasks, numbers, and automations in one place. This is a live demo; click around. All numbers illustrative."
       />
 

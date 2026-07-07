@@ -62,12 +62,6 @@ const STEP_ICONS = [
     <circle cx="16" cy="12" r="2.2" fill="currentColor" stroke="none" />
     <circle cx="8" cy="18" r="2.2" fill="currentColor" stroke="none" />
   </svg>,
-  // Onboarding — user plus
-  <svg key="onboarding" {...ICON_PROPS} aria-hidden>
-    <circle cx="9" cy="8" r="3.2" />
-    <path d="M3.6 20a5.8 5.8 0 0 1 10.8 0" />
-    <path d="M18 8v6M15 11h6" />
-  </svg>,
 ];
 
 /* ------------------------------------------------------------------ */
@@ -452,82 +446,6 @@ function OptimizeWidget({ play, reduce }: WidgetProps) {
 }
 
 /* ------------------------------------------------------------------ */
-/* 5. Onboarding — ramp progress ring + completing checklist           */
-/* ------------------------------------------------------------------ */
-function OnboardingWidget({ play, reduce }: WidgetProps) {
-  const days = useCountUp(4, play, reduce, 1.5);
-  const steps = ["Access granted", "Playbook read", "First task shipped", "Running solo"];
-  return (
-    <div className={frame}>
-      <div className="flex items-center gap-4">
-        <div className="relative h-[74px] w-[74px] shrink-0">
-          <svg viewBox="0 0 74 74" className="h-full w-full -rotate-90">
-            <defs>
-              <linearGradient id="rampGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#E55A00" />
-                <stop offset="100%" stopColor="#FFA033" />
-              </linearGradient>
-            </defs>
-            <circle cx="37" cy="37" r="31" fill="none" stroke="var(--border)" strokeWidth="4" />
-            <motion.circle
-              cx="37"
-              cy="37"
-              r="31"
-              fill="none"
-              stroke="url(#rampGrad)"
-              strokeWidth="4"
-              strokeLinecap="round"
-              initial={false}
-              animate={play ? { pathLength: [0, 1, 1, 0] } : { pathLength: 1 }}
-              transition={
-                play
-                  ? { duration: 4, repeat: Infinity, times: [0, 0.62, 0.88, 1], ease }
-                  : { duration: 0.3 }
-              }
-            />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="font-display text-[19px] font-bold leading-none text-heading tabular-nums">
-              {days}
-            </span>
-            <span className="mt-0.5 font-mono text-[7.5px] uppercase tracking-[0.1em] text-muted">
-              days
-            </span>
-          </div>
-        </div>
-        <div className="min-w-0 flex-1 space-y-1.5">
-          {steps.map((s, i) => (
-            <motion.div
-              key={s}
-              className="flex items-center gap-2 text-[11px] text-bodystrong"
-              style={{ willChange: "transform, opacity" }}
-              animate={
-                play ? { opacity: [0.3, 1, 1, 0.3], x: [-4, 0, 0, -4] } : { opacity: 1, x: 0 }
-              }
-              transition={
-                play
-                  ? {
-                      duration: 4,
-                      repeat: Infinity,
-                      times: [0, 0.16 + i * 0.16, 0.88, 1],
-                      ease,
-                    }
-                  : { duration: 0.3 }
-              }
-            >
-              <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-flame/15 text-flame">
-                <CheckMini size={9} />
-              </span>
-              {s}
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /* Steps                                                               */
 /* ------------------------------------------------------------------ */
 type Step = {
@@ -556,11 +474,6 @@ const STEPS: Step[] = [
     title: "Optimize",
     desc: "We read how the system actually gets used, then tighten it: pruning friction, sharpening automations, and compounding the wins the audit surfaced.",
     Widget: OptimizeWidget,
-  },
-  {
-    title: "Onboarding",
-    desc: "We turn your operation into something teachable — documented playbooks and onboarding so every new hire ramps in days, not months, without shadowing you.",
-    Widget: OnboardingWidget,
   },
 ];
 
@@ -610,10 +523,10 @@ export function ProcessSteps() {
         title={
           <>
             From first audit to a team that{" "}
-            <span className="gradient-text">runs without you.</span>
+            <span className="serif-accent gradient-text">runs without you.</span>
           </>
         }
-        lead="Five steps from the first diagnostic to a system your team runs on its own. No retainer pitch on day one. The audit decides what gets built."
+        lead="Four steps from the first diagnostic to a system your team runs on its own. No retainer pitch on day one. The audit decides what gets built."
       />
 
       <div
@@ -622,21 +535,16 @@ export function ProcessSteps() {
       >
         {STEPS.map((step, i) => {
           const { Widget } = step;
-          const isLast = i === STEPS.length - 1;
           return (
             <Reveal
               key={step.title}
               delay={(i % 2) * 0.08}
               y={28}
               blur
-              className={`h-full ${isLast ? "lg:col-span-2" : ""}`}
+              className="h-full"
             >
-              <article
-                className={`surface-card surface-card-lift group h-full rounded-card p-6 sm:p-7 ${
-                  isLast ? "lg:flex lg:items-center lg:gap-10" : "flex flex-col"
-                }`}
-              >
-                <div className={isLast ? "lg:flex-1" : ""}>
+              <article className="surface-card surface-card-lift group flex h-full flex-col rounded-card p-6 sm:p-7">
+                <div>
                   <StepHeader index={i} />
                   <h3 className="mt-4 font-display text-[20px] font-semibold tracking-[-0.01em] text-heading sm:text-[22px]">
                     {step.title}
@@ -645,7 +553,7 @@ export function ProcessSteps() {
                     {step.desc}
                   </p>
                 </div>
-                <div className={`mt-5 ${isLast ? "lg:mt-0 lg:w-[46%] lg:shrink-0" : ""}`}>
+                <div className="mt-auto pt-5">
                   <Widget play={play} reduce={!!reduce} />
                 </div>
               </article>

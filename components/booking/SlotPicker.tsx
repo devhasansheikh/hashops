@@ -53,7 +53,7 @@ function Shimmer() {
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="h-11 animate-pulse rounded-btn bg-surface2"
+                className="h-11 animate-pulse rounded-pill bg-surface2"
                 style={{ animationDelay: `${(g * 6 + i) * 40}ms` }}
               />
             ))}
@@ -188,7 +188,7 @@ export function SlotPicker({
                     }}
                     whileHover={reduce ? undefined : { y: -2 }}
                     whileTap={reduce ? undefined : { scale: 0.97 }}
-                    className={`rounded-btn border py-2.5 text-center font-display text-[14px] font-medium transition-colors duration-200 ${
+                    className={`rounded-pill border py-2.5 text-center font-display text-[14px] font-medium transition-colors duration-200 ${
                       isSel
                         ? "border-flame bg-[var(--flame-glow)] text-heading shadow-[0_6px_18px_-10px_var(--flame)]"
                         : "border-strong text-bodystrong hover:border-flame hover:bg-surface2/50 hover:text-heading"

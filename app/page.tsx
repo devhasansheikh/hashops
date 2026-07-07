@@ -14,12 +14,16 @@ import { FAQ } from "@/components/FAQ";
 import { FinalCTA } from "@/components/FinalCTA";
 import { Footer } from "@/components/Footer";
 import { Backdrop } from "@/components/Backdrop";
+import { AuroraField } from "@/components/AuroraField";
+import { SectionFX } from "@/components/SectionFX";
 import { ScrollProgress } from "@/components/ScrollProgress";
 
 export default function Home() {
   return (
     <>
       <Backdrop />
+      <AuroraField />
+      <SectionFX />
       <ScrollProgress />
       <Nav />
       <main className="relative z-[1]">

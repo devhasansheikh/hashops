@@ -1,15 +1,18 @@
 "use client";
 
 import { useCalendly } from "@/components/CalendlyModal";
+import { ArrowOrb } from "@/components/ui/ArrowOrb";
 import { BOOK_CTA } from "@/lib/site";
+
+export { ArrowOrb };
 
 type Size = "sm" | "md" | "lg";
 
 const SIZES: Record<Size, string> = {
   // hero CTAs stay deliberately small so the headline dominates
-  sm: "px-4 py-[9px] text-xs",
-  md: "px-5 py-2.5 text-sm",
-  lg: "px-7 py-3.5 text-[15px]",
+  sm: "pl-4 pr-[5px] py-[5px] text-xs",
+  md: "pl-5 pr-[7px] py-[7px] text-sm",
+  lg: "pl-7 pr-2.5 py-2.5 text-[15px]",
 };
 
 export function ArrowIcon({ className }: { className?: string }) {
@@ -33,7 +36,7 @@ export function ArrowIcon({ className }: { className?: string }) {
   );
 }
 
-/** Primary CTA — opens the Calendly booking modal. */
+/** Primary CTA — opens the booking modal. */
 export function BookCallButton({
   size = "md",
   label = BOOK_CTA,
@@ -50,10 +53,16 @@ export function BookCallButton({
       className={`btn-primary ${SIZES[size]} ${className}`}
     >
       {label}
-      <ArrowIcon className="btn-arrow" />
+      <ArrowOrb className={size === "lg" ? "!h-8 !w-8" : size === "md" ? "!h-7 !w-7" : ""} />
     </button>
   );
 }
+
+const SIZES_EVEN: Record<Size, string> = {
+  sm: "px-4 py-[9px] text-xs",
+  md: "px-5 py-2.5 text-sm",
+  lg: "px-7 py-3.5 text-[15px]",
+};
 
 export function SecondaryButton({
   size = "md",
@@ -67,7 +76,7 @@ export function SecondaryButton({
   className?: string;
 }) {
   return (
-    <button onClick={onClick} className={`btn-secondary ${SIZES[size]} ${className}`}>
+    <button onClick={onClick} className={`btn-secondary ${SIZES_EVEN[size]} ${className}`}>
       {children}
     </button>
   );

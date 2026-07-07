@@ -94,7 +94,8 @@ export function CalendlyProvider({ children }: { children: React.ReactNode }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 16, scale: 0.98 }}
               transition={{ type: "spring", stiffness: 340, damping: 30, mass: 0.9 }}
-              className="relative z-10 flex max-h-[92dvh] w-full max-w-[560px] flex-col overflow-hidden rounded-window border border-strong bg-surface shadow-2xl"
+              className="relative z-10 flex max-h-[92dvh] w-full max-w-[560px] flex-col overflow-hidden rounded-window border border-[var(--glass-border)] shadow-2xl backdrop-blur-2xl"
+              style={{ background: "var(--glass-sheen), var(--glass-bg-solid)" }}
             >
               <div className="flex items-center justify-between border-b border-line px-5 py-3">
                 <span className="flex items-center gap-2.5">

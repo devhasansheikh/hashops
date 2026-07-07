@@ -48,9 +48,14 @@ export function FAQ() {
   return (
     <section id="faq" className="relative px-5 py-24 sm:px-8">
       <SectionHead
-        index="09"
+        index="10"
         eyebrow="FAQ"
-        title="Questions founders actually ask."
+        title={
+          <>
+            Questions founders{" "}
+            <span className="serif-accent gradient-text">actually ask.</span>
+          </>
+        }
       />
 
       <Reveal delay={0.1} className="mx-auto mt-12 max-w-[680px]">

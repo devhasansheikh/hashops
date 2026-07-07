@@ -2,6 +2,7 @@
 
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
+import { ArrowOrb } from "@/components/ui/ArrowOrb";
 import { useCalendly } from "@/components/CalendlyModal";
 
 type Tier = {
@@ -89,7 +90,12 @@ export function Pricing() {
       <SectionHead
         index="08"
         eyebrow="Engagements"
-        title="Three ways to work with us."
+        title={
+          <>
+            Three ways to{" "}
+            <span className="serif-accent gradient-text">work with us.</span>
+          </>
+        }
       />
 
       <Reveal delay={0.08} className="mx-auto mt-8 max-w-2xl">
@@ -165,9 +171,10 @@ export function Pricing() {
                   onClick={openCalendly}
                   className={`${
                     tier.featured ? "btn-primary" : "btn-secondary"
-                  } w-full px-5 py-3 text-sm`}
+                  } w-full px-5 py-2 text-sm`}
                 >
                   {tier.cta}
+                  <ArrowOrb className="!h-7 !w-7" />
                 </button>
               </div>
             </div>

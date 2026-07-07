@@ -42,6 +42,8 @@ void main(){
   vec2 q = uv - 0.5;
   q.x *= aspect;
   q -= uMouse * 0.016;
+  // slow camera sway — the whole scene breathes instead of sitting still
+  q += vec2(sin(uTime*0.09), cos(uTime*0.12)) * 0.007;
   float t = uTime;
 
   // Planet limb: a large circle whose top arc sits above the hero copy. Kept
@@ -65,8 +67,30 @@ void main(){
   float rayN = fbm(vec2(ang*5.0, length(d)*1.3 - t*0.09));
   float rays = smoothstep(0.52, 0.97, rayN) * atmo * 0.65;
 
-  float breathe = 0.9 + 0.1*sin(t*0.35);
-  float glow = (rim*0.95 + atmo*0.4 + inner*0.26 + rays*0.4) * breathe;
+  // Volumetric ember nebula — two counter-drifting fbm layers churn above
+  // the arc so the atmosphere visibly moves.
+  float nebN  = fbm(q*2.3 + vec2(t*0.05, -t*0.03));
+  float nebN2 = fbm(q*3.4 + vec2(-t*0.065, t*0.022));
+  float nebFall = exp(-max(edge,0.0)*3.4) * above;
+  float neb = (smoothstep(0.42, 0.95, nebN)*0.55 + smoothstep(0.5, 0.95, nebN2)*0.35)
+            * nebFall * mix(0.35, 1.0, along);
+
+  // energy pulse traveling back and forth along the horizon rim
+  float pang = atan(q.x - C.x, q.y - C.y);
+  float ppos = 0.85*sin(t*0.22);
+  float rimPulse = exp(-pow((pang - ppos)*7.0, 2.0)) * exp(-abs(edge)*80.0);
+
+  // silky aurora veils — two slow light curtains waving above the horizon,
+  // shimmering through drifting fbm. Cinematic, no particles.
+  float wob1 = 0.5*sin(q.x*2.8 + t*0.35) + 0.25*sin(q.x*5.3 - t*0.22);
+  float wob2 = 0.5*sin(q.x*1.9 - t*0.28 + 2.0) + 0.25*sin(q.x*4.1 + t*0.31);
+  float veil1 = exp(-pow((edge - (0.10 + 0.05*wob1))*15.0, 2.0));
+  float veil2 = exp(-pow((edge - (0.24 + 0.08*wob2))*11.0, 2.0));
+  float shimmer = 0.7 + 0.3*fbm(vec2(q.x*3.0 + t*0.18, edge*7.0 - t*0.05));
+  float veils = (veil1*0.55 + veil2*0.34) * shimmer * mix(0.3, 1.0, along) * above;
+
+  float breathe = 0.88 + 0.12*sin(t*0.5);
+  float glow = (rim*0.95 + atmo*0.4 + inner*0.26 + rays*0.4 + neb*0.6 + rimPulse*0.55 + veils*0.5) * breathe;
 
   vec3 ember = vec3(0.52,0.14,0.0);
   vec3 flame = vec3(1.0,0.47,0.11);
@@ -80,6 +104,33 @@ void main(){
   vec3 darkBase = vec3(0.039,0.039,0.043);
   vec3 darkOut = darkBase + col*glow;
 
+  // Starfield — sparse warm points with slow twinkle, sky side only.
+  // Vanishes in light theme via the final mix.
+  vec2 sg = q*92.0;
+  vec2 cell = floor(sg);
+  float sh = hash(cell);
+  float sh2 = hash(cell + 41.7);
+  vec2 sp = fract(sg) - 0.5;
+  float sdist = length(sp - (vec2(sh, sh2) - 0.5)*0.6);
+  float tw = 0.55 + 0.45*sin(t*(0.8 + sh*2.2) + sh*40.0);
+  float starMask = step(0.991, sh) * above * smoothstep(0.02, 0.3, edge);
+  float star = smoothstep(0.10, 0.0, sdist) * starMask * tw;
+  darkOut += vec3(1.0, 0.92, 0.82) * star * 0.55;
+
+  // Occasional meteor streaking down the sky (dark theme only)
+  float mwin = 6.5;
+  float mseed = floor(t/mwin);
+  float mt = fract(t/mwin);
+  float mo = step(0.45, hash(vec2(mseed, 3.7)));
+  vec2 ma = vec2(mix(-0.85, 0.85, hash(vec2(mseed, 1.3))), 0.55 + 0.3*hash(vec2(mseed, 2.1)));
+  vec2 mdir = normalize(vec2(mix(0.6, 1.0, hash(vec2(mseed, 4.2))), -0.35));
+  vec2 mrel = q - (ma + mdir * (mt*1.7 - 0.4));
+  float alongM = dot(mrel, mdir);
+  float perpM = abs(dot(mrel, vec2(-mdir.y, mdir.x)));
+  float meteor = exp(-perpM*260.0) * exp(alongM*16.0) * step(alongM, 0.0)
+               * smoothstep(-0.45, -0.02, alongM) * mo * sin(3.14159*mt) * above;
+  darkOut += vec3(1.0, 0.95, 0.85) * meteor * 0.85;
+
   // Light theme: a soft warm dawn band over bone — airy, not glowy.
   vec3 lightBase = vec3(0.980,0.980,0.969);
   vec3 warm = vec3(1.0,0.80,0.58);
@@ -89,8 +140,12 @@ void main(){
 
   vec3 outc = mix(darkOut, lightOut, uTheme);
 
+  // cinematic vignette — corners fall away so the headline owns the frame
+  float vig = smoothstep(1.55, 0.42, length(vec2(q.x*0.8, (uv.y-0.52)*1.4)));
+  outc *= mix(mix(0.8, 1.0, vig), mix(0.95, 1.0, vig), uTheme);
+
   // film grain
-  float g = (hash(uv*uRes + fract(t)) - 0.5) * mix(0.028, 0.012, uTheme);
+  float g = (hash(uv*uRes + fract(t)) - 0.5) * mix(0.022, 0.011, uTheme);
   outc += g;
 
   frag = vec4(outc, 1.0);

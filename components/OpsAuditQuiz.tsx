@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { AnimatePresence, motion, useInView, type Variants } from "framer-motion";
+import { useState } from "react";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { useReduceMotion } from "@/lib/useReduceMotion";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { BookCallButton, SecondaryButton } from "@/components/ui/Buttons";
+import { ArrowOrb } from "@/components/ui/ArrowOrb";
 import { Logo } from "@/components/Logo";
 
 /* ------------------------------------------------------------------ */
@@ -83,195 +84,6 @@ const VERDICTS: { max: number; title: string; sub: string }[] = [
 
 const ease = [0.2, 0.7, 0.3, 1] as const;
 
-/* ------------------------------------------------------------------ */
-/* Ambient decor — light "data streams" flowing from both gutters into    */
-/* the console: fanned feed lines + travelling pulses. xl+, perf-gated.    */
-/* ------------------------------------------------------------------ */
-
-const FEEDS = [
-  { angle: -15, tone: "flame", duration: 3.6, delay: 0.0, depth: 0.68 },
-  { angle: -7.5, tone: "flame", duration: 2.9, delay: 1.3, depth: 0.9 },
-  { angle: 0, tone: "success", duration: 3.4, delay: 0.6, depth: 1 },
-  { angle: 7.5, tone: "flame", duration: 3.1, delay: 1.9, depth: 0.9 },
-  { angle: 15, tone: "flame", duration: 3.7, delay: 0.95, depth: 0.68 },
-] as const;
-
-function FeedStream({
-  side,
-  angle,
-  tone,
-  duration,
-  delay,
-  depth,
-  play,
-}: {
-  side: "left" | "right";
-  angle: number;
-  tone: "flame" | "success";
-  duration: number;
-  delay: number;
-  depth: number;
-  play: boolean;
-}) {
-  const isLeft = side === "left";
-  const color = tone === "success" ? "var(--success)" : "var(--flame)";
-  const dir = isLeft ? "90deg" : "270deg";
-
-  return (
-    <div
-      className="absolute top-1/2 h-px"
-      style={{
-        width: "calc(50% - 384px)",
-        opacity: depth,
-        ...(isLeft ? { left: 0 } : { right: 0 }),
-        transformOrigin: isLeft ? "right center" : "left center",
-        transform: `rotate(${isLeft ? angle : -angle}deg)`,
-        background: `linear-gradient(${dir}, transparent, rgba(255,122,26,0.05) 26%, rgba(255,122,26,0.2))`,
-      }}
-    >
-      {/* source node at the outer edge */}
-      <span
-        className="absolute top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full"
-        style={{
-          ...(isLeft ? { left: -3 } : { right: -3 }),
-          background: color,
-          boxShadow: `0 0 8px 1px ${color}`,
-        }}
-      />
-
-      {/* light pulse travelling from the edge into the console */}
-      {play && (
-        <motion.div
-          className="absolute inset-y-0 w-full"
-          animate={{
-            x: isLeft
-              ? ["-100%", "-88%", "-25%", "0%"]
-              : ["100%", "88%", "25%", "0%"],
-            opacity: [0, 1, 1, 0],
-          }}
-          transition={{
-            duration,
-            repeat: Infinity,
-            ease: "linear",
-            delay,
-            times: [0, 0.12, 0.75, 1],
-          }}
-        >
-          {/* gradient tail */}
-          <span
-            className="absolute top-1/2 h-[2px] w-16 -translate-y-1/2 rounded-full"
-            style={{
-              ...(isLeft ? { right: 0 } : { left: 0 }),
-              background: `linear-gradient(${dir}, transparent, ${color})`,
-            }}
-          />
-          {/* bright head */}
-          <span
-            className="absolute top-1/2 h-[5px] w-[5px] -translate-y-1/2 rounded-full"
-            style={{
-              ...(isLeft ? { right: -1 } : { left: -1 }),
-              background: color,
-              boxShadow: `0 0 12px 2px ${color}`,
-            }}
-          />
-        </motion.div>
-      )}
-    </div>
-  );
-}
-
-function StreamHub({ side, play }: { side: "left" | "right"; play: boolean }) {
-  const isLeft = side === "left";
-  return (
-    <div
-      className={`absolute h-2 w-2 -translate-y-1/2 ${
-        isLeft ? "-translate-x-1/2" : "translate-x-1/2"
-      }`}
-      style={{
-        top: "50%",
-        ...(isLeft
-          ? { left: "calc(50% - 384px)" }
-          : { right: "calc(50% - 384px)" }),
-      }}
-    >
-      {/* soft core glow */}
-      <motion.span
-        className="absolute left-1/2 top-1/2 h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full blur-md"
-        style={{ background: "var(--flame)" }}
-        animate={
-          play
-            ? { opacity: [0.2, 0.5, 0.2], scale: [0.8, 1.2, 0.8] }
-            : { opacity: 0.3 }
-        }
-        transition={
-          play ? { duration: 2.6, repeat: Infinity, ease: "easeInOut" } : undefined
-        }
-      />
-
-      {/* arrival ripples — data being absorbed into the console */}
-      {play &&
-        [0, 1, 2].map((i) => (
-          <motion.span
-            key={i}
-            className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full"
-            style={{ border: "1px solid rgba(255,122,26,0.5)" }}
-            animate={{ scale: [1, 4], opacity: [0.55, 0] }}
-            transition={{
-              duration: 2.6,
-              repeat: Infinity,
-              ease: "easeOut",
-              delay: i * 0.86,
-            }}
-          />
-        ))}
-
-      {/* solid core node */}
-      <span
-        className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{ background: "var(--flame)", boxShadow: "0 0 10px 2px var(--flame)" }}
-      />
-    </div>
-  );
-}
-
-function SideFeeds({ side, play }: { side: "left" | "right"; play: boolean }) {
-  const isLeft = side === "left";
-  return (
-    <>
-      <StreamHub side={side} play={play} />
-      {FEEDS.map((f, i) => (
-        <FeedStream
-          key={i}
-          side={side}
-          angle={f.angle}
-          tone={f.tone}
-          duration={f.duration}
-          delay={f.delay + (isLeft ? 0 : 0.7)}
-          depth={f.depth}
-          play={play}
-        />
-      ))}
-    </>
-  );
-}
-
-function AuditDecor({ reduce }: { reduce: boolean }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { margin: "-12% 0px -12% 0px" });
-  const play = inView && !reduce;
-
-  return (
-    <div
-      ref={ref}
-      className="pointer-events-none absolute inset-0 -z-10 hidden xl:block"
-      aria-hidden
-    >
-      <SideFeeds side="left" play={play} />
-      <SideFeeds side="right" play={play} />
-    </div>
-  );
-}
-
 type Stage = "intro" | "quiz" | "result";
 
 export function OpsAuditQuiz() {
@@ -347,28 +159,45 @@ export function OpsAuditQuiz() {
         aria-hidden
       />
 
-      <AuditDecor reduce={reduce} />
-
       <SectionHead
         index="04"
         eyebrow="The 7-Layer Audit"
-        title="Find where your business leaks time and money in 30 seconds."
+        title={
+          <>
+            Find where your business leaks time and money{" "}
+            <span className="serif-accent gradient-text">in 30 seconds.</span>
+          </>
+        }
         lead="Seven yes/no questions, one for each layer of the business. Answer honestly. The math at the end is conservative."
       />
 
       <Reveal delay={0.12} scale={0.97} blur className="relative mx-auto mt-12 max-w-[760px]">
-        <div className="surface-card relative overflow-hidden rounded-card border-strong shadow-[var(--window-shadow)]">
-          {/* thin Flame progress bar */}
-          <div className="absolute inset-x-0 top-0 h-[3px] bg-surface2" aria-hidden>
-            <motion.div
-              className="h-full"
-              style={{
-                background: "linear-gradient(90deg, #E55A00, #FF7A1A, #FFA033)",
-              }}
-              animate={{ width: `${progress * 100}%` }}
-              transition={{ duration: reduce ? 0 : 0.45, ease }}
-            />
-          </div>
+        {/* slow-orbiting ember halo — a soft beam of light circles the console */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center"
+        >
+          <span className="quiz-halo" />
+        </div>
+        <div className="surface-card relative overflow-hidden rounded-card shadow-[var(--window-shadow)]">
+          {/* thin Flame progress bar — appears once the audit starts, so the
+              glass top edge stays clean on the intro screen */}
+          {stage !== "intro" && (
+            <div
+              className="absolute inset-x-0 top-0 h-[3px] bg-[var(--border)]"
+              aria-hidden
+            >
+              <motion.div
+                className="h-full"
+                style={{
+                  background: "linear-gradient(90deg, #E55A00, #FF7A1A, #FFA033)",
+                }}
+                initial={false}
+                animate={{ width: `${progress * 100}%` }}
+                transition={{ duration: reduce ? 0 : 0.45, ease }}
+              />
+            </div>
+          )}
 
           <div className="px-6 py-12 sm:px-12 sm:py-14">
             <AnimatePresence mode="wait">
@@ -398,25 +227,10 @@ export function OpsAuditQuiz() {
                   </p>
                   <button
                     onClick={() => setStage("quiz")}
-                    className="btn-primary mt-8 px-6 py-3 text-sm"
+                    className="btn-primary mt-8 pl-6 pr-2 py-2 text-sm"
                   >
                     Start the audit
-                    <svg
-                      className="btn-arrow"
-                      width="13"
-                      height="13"
-                      viewBox="0 0 14 14"
-                      fill="none"
-                      aria-hidden
-                    >
-                      <path
-                        d="M1.5 7h11M8 2.5L12.5 7 8 11.5"
-                        stroke="currentColor"
-                        strokeWidth="1.6"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                    <ArrowOrb className="!h-7 !w-7" />
                   </button>
                 </motion.div>
               )}

@@ -92,11 +92,14 @@ export function Hero() {
           </span>
         </motion.div>
 
-        {/* dominant headline with word-stagger reveal */}
+        {/* dominant headline with word-stagger reveal — sans first line,
+            editorial serif italic on the payoff line (aihub-style mix) */}
         {reduce ? (
-          <h1 className="mt-8 max-w-[min(92vw,1000px)] font-display text-[clamp(2.5rem,7.2vw,5.1rem)] font-semibold leading-[1.04] tracking-[-0.025em] text-heading">
+          <h1 className="mt-8 max-w-[min(92vw,1040px)] font-display text-[clamp(2.6rem,7.4vw,5.4rem)] font-semibold leading-[1.03] tracking-[-0.028em] text-heading">
             <span className="block">Take on more clients</span>
-            <span className="gradient-text block">without it all breaking.</span>
+            <span className="serif-accent gradient-text block">
+              without it all breaking.
+            </span>
           </h1>
         ) : (
           <motion.h1
@@ -104,7 +107,7 @@ export function Hero() {
             initial="hidden"
             animate="show"
             aria-label="Take on more clients without it all breaking."
-            className="mt-8 max-w-[min(92vw,1000px)] font-display text-[clamp(2.5rem,7.2vw,5.1rem)] font-semibold leading-[1.04] tracking-[-0.025em] text-heading"
+            className="mt-8 max-w-[min(92vw,1040px)] font-display text-[clamp(2.6rem,7.4vw,5.4rem)] font-semibold leading-[1.03] tracking-[-0.028em] text-heading"
           >
             <span className="block" aria-hidden>
               {LINE1.map((w, i) => (
@@ -117,12 +120,12 @@ export function Hero() {
                 </motion.span>
               ))}
             </span>
-            <span className="block" aria-hidden>
+            <span className="mt-1 block" aria-hidden>
               {LINE2.map((w, i) => (
                 <motion.span
                   key={`b${i}`}
                   variants={word}
-                  className="gradient-text mr-[0.26em] inline-block last:mr-0"
+                  className="serif-accent gradient-text mr-[0.24em] inline-block pr-[0.02em] last:mr-0"
                 >
                   {w}
                 </motion.span>

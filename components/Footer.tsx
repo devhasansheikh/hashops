@@ -83,6 +83,23 @@ export function Footer() {
           <span>Working worldwide.</span>
         </div>
       </div>
+
+      {/* giant watermark wordmark fading into the page edge */}
+      <div className="pointer-events-none select-none overflow-hidden" aria-hidden>
+        <p
+          className="-mb-[0.24em] text-center font-display text-[clamp(5.5rem,19vw,16rem)] font-bold leading-none tracking-[-0.02em]"
+          style={{
+            background:
+              "linear-gradient(180deg, var(--heading) 0%, transparent 88%)",
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+            color: "transparent",
+            opacity: 0.07,
+          }}
+        >
+          HASH
+        </p>
+      </div>
     </footer>
   );
 }

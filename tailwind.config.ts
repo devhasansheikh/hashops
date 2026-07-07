@@ -32,15 +32,16 @@ const config: Config = {
         strong: "var(--border-strong)",
       },
       fontFamily: {
-        display: ["var(--font-hanken)", "system-ui", "sans-serif"],
-        body: ["var(--font-jost)", "system-ui", "sans-serif"],
+        display: ["var(--font-sans)", "system-ui", "sans-serif"],
+        body: ["var(--font-sans)", "system-ui", "sans-serif"],
+        serif: ["var(--font-serif)", "Georgia", "serif"],
         mono: ["var(--font-jbmono)", "ui-monospace", "monospace"],
       },
       borderRadius: {
-        btn: "11px",
-        card: "18px",
-        window: "16px",
-        pill: "30px",
+        btn: "12px",
+        card: "22px",
+        window: "20px",
+        pill: "999px",
       },
       boxShadow: {
         card: "0 18px 40px -24px rgba(0,0,0,0.45)",
