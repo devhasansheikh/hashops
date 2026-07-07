@@ -104,6 +104,14 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+/* hard stop for horizontal overflow from decorative elements — a page that
+   measures wider than the viewport makes mobile browsers zoom the layout
+   out and pushes the fixed nav's controls off-screen */
+main {
+  overflow-x: clip;
 }
 
 html.lenis,
@@ -636,7 +644,7 @@ button:hover > .arrow-orb svg:last-child,
 /* ------------------------------------------------------------------ */
 
 .quiz-halo {
-  width: min(150vw, 960px);
+  width: min(120vw, 960px);
   aspect-ratio: 1;
   flex-shrink: 0;
   border-radius: 50%;
@@ -921,6 +929,53 @@ button:hover > .arrow-orb svg:last-child,
 .roi-slider:focus-visible {
   outline: 2px solid var(--flame);
   outline-offset: 4px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Mobile performance + rhythm — phones get the same look built from    */
+/* cheap layers: no live backdrop blur, no full-screen blend-mode        */
+/* grain, no whole-section blur transitions, tighter section spacing.    */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 767px) {
+  /* glass reads via the denser tint; live backdrop blur is the single
+     biggest GPU cost on phones */
+  .surface-card {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background:
+      var(--glass-sheen) padding-box,
+      linear-gradient(var(--glass-bg-solid), var(--glass-bg-solid)) padding-box,
+      var(--glass-ring) border-box;
+  }
+
+  /* fixed full-screen overlay with mix-blend-mode recomposites the whole
+     page every scroll frame on mobile GPUs */
+  .film-grain {
+    display: none;
+  }
+
+  /* two drifting blobs carry the ambience; the third is desktop garnish */
+  .aurora-c {
+    display: none;
+  }
+
+  /* section entrances keep the rise + fade, drop the expensive blur */
+  .sxn {
+    filter: none;
+  }
+
+  /* halo is a large blurred layer and overflows small screens */
+  .quiz-halo {
+    display: none;
+  }
+
+  /* tighter vertical rhythm so mobile feels composed, not stretched
+     (hero and the tool marquee keep their own spacing) */
+  main > section[class]:not([aria-label]):not(#top) {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
 }
 
 /* ------------------------------------------------------------------ */

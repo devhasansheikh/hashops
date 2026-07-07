@@ -26,6 +26,7 @@ out vec4 frag;
 uniform vec2 uRes;
 uniform float uTime;
 uniform float uTheme;   // 0 dark .. 1 light
+uniform float uLite;    // 1 = mobile: skip the priciest layers
 uniform vec2 uMouse;    // -1..1
 
 float hash(vec2 p){ p = fract(p*vec2(123.34,345.45)); p += dot(p,p+34.345); return fract(p.x*p.y); }
@@ -68,9 +69,9 @@ void main(){
   float rays = smoothstep(0.52, 0.97, rayN) * atmo * 0.65;
 
   // Volumetric ember nebula — two counter-drifting fbm layers churn above
-  // the arc so the atmosphere visibly moves.
+  // the arc so the atmosphere visibly moves (one layer on mobile).
   float nebN  = fbm(q*2.3 + vec2(t*0.05, -t*0.03));
-  float nebN2 = fbm(q*3.4 + vec2(-t*0.065, t*0.022));
+  float nebN2 = (uLite < 0.5) ? fbm(q*3.4 + vec2(-t*0.065, t*0.022)) : nebN;
   float nebFall = exp(-max(edge,0.0)*3.4) * above;
   float neb = (smoothstep(0.42, 0.95, nebN)*0.55 + smoothstep(0.5, 0.95, nebN2)*0.35)
             * nebFall * mix(0.35, 1.0, along);
@@ -86,7 +87,9 @@ void main(){
   float wob2 = 0.5*sin(q.x*1.9 - t*0.28 + 2.0) + 0.25*sin(q.x*4.1 + t*0.31);
   float veil1 = exp(-pow((edge - (0.10 + 0.05*wob1))*15.0, 2.0));
   float veil2 = exp(-pow((edge - (0.24 + 0.08*wob2))*11.0, 2.0));
-  float shimmer = 0.7 + 0.3*fbm(vec2(q.x*3.0 + t*0.18, edge*7.0 - t*0.05));
+  float shimmer = (uLite < 0.5)
+    ? 0.7 + 0.3*fbm(vec2(q.x*3.0 + t*0.18, edge*7.0 - t*0.05))
+    : 0.85;
   float veils = (veil1*0.55 + veil2*0.34) * shimmer * mix(0.3, 1.0, along) * above;
 
   float breathe = 0.88 + 0.12*sin(t*0.5);
@@ -121,7 +124,7 @@ void main(){
   float mwin = 6.5;
   float mseed = floor(t/mwin);
   float mt = fract(t/mwin);
-  float mo = step(0.45, hash(vec2(mseed, 3.7)));
+  float mo = step(0.45, hash(vec2(mseed, 3.7))) * (1.0 - uLite);
   vec2 ma = vec2(mix(-0.85, 0.85, hash(vec2(mseed, 1.3))), 0.55 + 0.3*hash(vec2(mseed, 2.1)));
   vec2 mdir = normalize(vec2(mix(0.6, 1.0, hash(vec2(mseed, 4.2))), -0.35));
   vec2 mrel = q - (ma + mdir * (mt*1.7 - 0.4));
@@ -218,13 +221,17 @@ export function Backdrop() {
     const uRes = gl.getUniformLocation(prog, "uRes");
     const uTime = gl.getUniformLocation(prog, "uTime");
     const uTheme = gl.getUniformLocation(prog, "uTheme");
+    const uLite = gl.getUniformLocation(prog, "uLite");
     const uMouse = gl.getUniformLocation(prog, "uMouse");
 
-    const dprCap = window.innerWidth < 768 ? 1.25 : 1.5;
+    // phones: render at 1x and skip the priciest shader layers
+    let lite = window.innerWidth < 768 ? 1 : 0;
+    const dprCap = () => (window.innerWidth < 768 ? 1.0 : 1.5);
     let w = 0,
       h = 0;
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
+      lite = window.innerWidth < 768 ? 1 : 0;
+      const dpr = Math.min(window.devicePixelRatio || 1, dprCap());
       w = Math.floor(canvas.clientWidth * dpr);
       h = Math.floor(canvas.clientHeight * dpr);
       if (w === 0 || h === 0) return;
@@ -268,11 +275,12 @@ export function Backdrop() {
       mouse.x += (mouse.tx - mouse.x) * 0.04;
       mouse.y += (mouse.ty - mouse.y) * 0.04;
       themeMix += (themeRef.current - themeMix) * 0.08;
-      if (w !== Math.floor(canvas.clientWidth * Math.min(window.devicePixelRatio || 1, dprCap)))
+      if (w !== Math.floor(canvas.clientWidth * Math.min(window.devicePixelRatio || 1, dprCap())))
         resize();
       gl.uniform2f(uRes, w, h);
       gl.uniform1f(uTime, time);
       gl.uniform1f(uTheme, themeMix);
+      gl.uniform1f(uLite, lite);
       gl.uniform2f(uMouse, mouse.x, mouse.y);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
