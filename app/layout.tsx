@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Sans, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { Providers } from "@/components/Providers";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { SITE_URL } from "@/lib/site";
 import "flag-icons/css/flag-icons.min.css";
 import "./globals.css";
@@ -82,6 +83,7 @@ export default function RootLayout({
         <div className="film-grain" aria-hidden />
 
       </body>
+      <GoogleAnalytics gaId="G-HM2WJK40R4" />
     </html>
   );
 }
