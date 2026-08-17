@@ -16,5 +16,16 @@ next-env.d.ts
 brand material/
 leakproof-project-brief.html
 
+# case-study source material — internal briefs carrying publish gates, client
+# pricing and sales notes, plus raw client screenshots and screen recordings.
+# Only the optimized hero images in public/case-studies/ are published.
+HASH_Case_Study_*.pdf
+UPLABS Asset/
+Royal Key Supply/
+PRIMAS BCC/
+
+# working screenshots dropped in the project root
+issue.png
+
 # local editor/agent config
 .claude/

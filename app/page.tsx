@@ -6,7 +6,7 @@ import { LeakList } from "@/components/LeakList";
 import { OpsWorkspace } from "@/components/OpsWorkspace";
 import { OpsAuditQuiz } from "@/components/OpsAuditQuiz";
 import { ProcessSteps } from "@/components/ProcessSteps";
-import { ProofStats } from "@/components/ProofStats";
+import { CaseStudies } from "@/components/CaseStudies";
 import { CostBlock } from "@/components/CostBlock";
 import { Pricing } from "@/components/Pricing";
 import { Testimonial } from "@/components/Testimonial";
@@ -34,7 +34,7 @@ export default function Home() {
         <OpsWorkspace />
         <OpsAuditQuiz />
         <ProcessSteps />
-        <ProofStats />
+        <CaseStudies />
         <CostBlock />
         <Pricing />
         <Testimonial />

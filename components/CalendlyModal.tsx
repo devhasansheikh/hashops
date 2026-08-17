@@ -67,7 +67,10 @@ export function CalendlyProvider({ children }: { children: React.ReactNode }) {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="fixed inset-0 z-[90] flex items-center justify-center p-4 sm:p-6"
+            /* Booking is the terminal action, so it sits above every other
+               layer — including the case-study dialog (z-95), which can launch
+               it while staying open behind. */
+            className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

@@ -75,18 +75,21 @@ export function Nav({ links = NAV_LINKS }: { links?: readonly NavLink[] }) {
 
   return (
     <header className="fixed inset-x-0 top-0 z-[60] px-3 pt-3 sm:px-5 sm:pt-4">
-      <div className="mx-auto flex max-w-wide items-center justify-between gap-3">
+      {/* Three equal-weight tracks, so the pill is centred on the VIEWPORT
+          rather than on the leftover space between a narrow logo and a wider
+          CTA cluster (justify-between pushed it ~78px left). */}
+      <div className="mx-auto grid max-w-wide grid-cols-[1fr_auto_1fr] items-center gap-3">
         <a
           href="#top"
           onClick={(e) => go(e, "#top")}
           aria-label="HASH — back to top"
-          className="shrink-0 transition-opacity hover:opacity-80"
+          className="col-start-1 shrink-0 justify-self-start transition-opacity hover:opacity-80"
         >
-          <Lockup height={26} />
+          <Lockup height={38} />
         </a>
 
         <nav
-          className={`hidden items-center gap-0.5 p-1.5 lg:flex ${island}`}
+          className={`hidden items-center gap-0.5 justify-self-center p-1.5 lg:flex ${island}`}
           aria-label="Primary"
         >
           {links.map((link) => {
@@ -115,7 +118,10 @@ export function Nav({ links = NAV_LINKS }: { links?: readonly NavLink[] }) {
           })}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-2.5">
+        {/* pinned to the last track explicitly: below `lg` the centre nav is
+            display:none, and grid auto-placement would otherwise pull this
+            cluster into the middle column instead of the right edge */}
+        <div className="col-start-3 flex shrink-0 items-center gap-2.5 justify-self-end">
           <ThemeToggle />
           <div className="hidden sm:block">
             <BookCallButton size="sm" label="Book a call" />
