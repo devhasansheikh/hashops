@@ -6,6 +6,7 @@ import { CalendlyProvider } from "@/components/CalendlyModal";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { PageLoader } from "@/components/PageLoader";
 import { CardSpotlight } from "@/components/CardSpotlight";
+import { PerfGovernor } from "@/components/PerfGovernor";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -25,6 +26,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <CalendlyProvider>
           <SmoothScroll />
           <CardSpotlight />
+          <PerfGovernor />
           <PageLoader />
           {children}
         </CalendlyProvider>

@@ -224,13 +224,19 @@ export function Backdrop() {
     const uLite = gl.getUniformLocation(prog, "uLite");
     const uMouse = gl.getUniformLocation(prog, "uMouse");
 
-    // phones: render at 1x and skip the priciest shader layers
-    let lite = window.innerWidth < 768 ? 1 : 0;
-    const dprCap = () => (window.innerWidth < 768 ? 1.0 : 1.5);
+    // phones: render at 1x and skip the priciest shader layers.
+    // perf-lite desktops (set by PerfGovernor on sustained dropped frames)
+    // only render at 1x — every visual layer stays; on this soft glow the
+    // resolution drop is imperceptible.
+    const isPhone = () => window.innerWidth < 768;
+    const isPerfLite = () =>
+      document.documentElement.dataset.perf === "lite";
+    let lite = isPhone() ? 1 : 0;
+    const dprCap = () => (isPhone() || isPerfLite() ? 1.0 : 1.5);
     let w = 0,
       h = 0;
     const resize = () => {
-      lite = window.innerWidth < 768 ? 1 : 0;
+      lite = isPhone() ? 1 : 0;
       const dpr = Math.min(window.devicePixelRatio || 1, dprCap());
       w = Math.floor(canvas.clientWidth * dpr);
       h = Math.floor(canvas.clientHeight * dpr);
@@ -241,6 +247,13 @@ export function Backdrop() {
     };
     resize();
     window.addEventListener("resize", resize);
+
+    // react if the perf governor drops this session to the lite tier
+    const perfObs = new MutationObserver(resize);
+    perfObs.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-perf"],
+    });
 
     const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
     const onMove = (e: PointerEvent) => {
@@ -263,7 +276,9 @@ export function Backdrop() {
         /* fallback follows the same fade if shown */
       }
       canvas.style.opacity = String(k);
-      paused = window.scrollY > vh * 1.15;
+      // stop drawing as soon as the fade completes (k hits 0 at 0.85vh) —
+      // previously it kept rendering invisible frames until 1.15vh
+      paused = window.scrollY > vh * 0.9;
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -297,6 +312,7 @@ export function Backdrop() {
 
     return () => {
       cancelAnimationFrame(raf);
+      perfObs.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("scroll", onScroll);
