@@ -32,8 +32,15 @@ export function Footer() {
                   <a
                     href={link.href}
                     onClick={(e) => {
+                      // Route links navigate normally; hash links smooth-scroll,
+                      // falling back to the homepage anchor on subpages.
+                      if (!link.href.startsWith("#")) return;
                       e.preventDefault();
-                      scrollToId(link.href);
+                      if (document.querySelector(link.href)) {
+                        scrollToId(link.href);
+                      } else {
+                        window.location.assign(`/${link.href}`);
+                      }
                     }}
                     className="text-[14.5px] text-body transition-colors hover:text-heading"
                   >

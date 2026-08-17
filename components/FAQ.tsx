@@ -41,26 +41,34 @@ const ITEMS = [
   },
 ];
 
-export function FAQ() {
+type FAQItem = { q: string; a: string };
+
+export function FAQ({
+  items = ITEMS,
+  index = "10",
+  eyebrow = "FAQ",
+  title = (
+    <>
+      Questions founders{" "}
+      <span className="serif-accent gradient-text">actually ask.</span>
+    </>
+  ),
+}: {
+  items?: readonly FAQItem[];
+  index?: string;
+  eyebrow?: string;
+  title?: React.ReactNode;
+}) {
   const [open, setOpen] = useState<number | null>(0);
   const reduce = useReduceMotion();
 
   return (
     <section id="faq" className="relative px-5 py-24 sm:px-8">
-      <SectionHead
-        index="10"
-        eyebrow="FAQ"
-        title={
-          <>
-            Questions founders{" "}
-            <span className="serif-accent gradient-text">actually ask.</span>
-          </>
-        }
-      />
+      <SectionHead index={index} eyebrow={eyebrow} title={title} />
 
       <Reveal delay={0.1} className="mx-auto mt-12 max-w-[680px]">
         <div className="surface-card overflow-hidden rounded-card">
-          {ITEMS.map((item, i) => {
+          {items.map((item, i) => {
             const isOpen = open === i;
             return (
               <div key={item.q} className={i > 0 ? "border-t border-line" : ""}>

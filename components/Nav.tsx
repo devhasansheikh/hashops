@@ -8,12 +8,17 @@ import { BookCallButton } from "@/components/ui/Buttons";
 import { scrollToId } from "@/components/SmoothScroll";
 import { NAV_LINKS } from "@/lib/site";
 
+type NavLink = { label: string; href: string };
+
 /**
  * Floating glass pill nav — a blurred island under the top edge with an
  * animated active-section pill (scrollspy), aihub-style. Logo sits bare on
- * the left, CTA cluster on the right.
+ * the left, CTA cluster on the right. Links default to the homepage
+ * sections; subpages (e.g. /leakproof) pass their own. Hrefs starting with
+ * "/" navigate as routes; "#" hrefs smooth-scroll (falling back to the
+ * homepage anchor when the section isn't on the current page).
  */
-export function Nav() {
+export function Nav({ links = NAV_LINKS }: { links?: readonly NavLink[] }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
@@ -27,7 +32,9 @@ export function Nav() {
 
   // Scrollspy — the pill follows whichever nav section crosses mid-viewport.
   useEffect(() => {
-    const targets = NAV_LINKS.map((l) => document.getElementById(l.href.slice(1)))
+    const targets = links
+      .filter((l) => l.href.startsWith("#"))
+      .map((l) => document.getElementById(l.href.slice(1)))
       .filter((el): el is HTMLElement => Boolean(el));
     const hero = document.getElementById("top");
     const obs = new IntersectionObserver(
@@ -42,12 +49,22 @@ export function Nav() {
     targets.forEach((el) => obs.observe(el));
     if (hero) obs.observe(hero);
     return () => obs.disconnect();
-  }, []);
+  }, [links]);
 
   const go = (e: React.MouseEvent, href: string) => {
+    if (!href.startsWith("#")) {
+      // Route link — let the browser navigate normally.
+      setOpen(false);
+      return;
+    }
     e.preventDefault();
     setOpen(false);
-    scrollToId(href);
+    if (document.querySelector(href)) {
+      scrollToId(href);
+    } else {
+      // Section lives on the homepage — go there with the anchor.
+      window.location.assign(`/${href}`);
+    }
   };
 
   const island = `rounded-pill border backdrop-blur-xl transition-all duration-300 ${
@@ -72,7 +89,7 @@ export function Nav() {
           className={`hidden items-center gap-0.5 p-1.5 lg:flex ${island}`}
           aria-label="Primary"
         >
-          {NAV_LINKS.map((link) => {
+          {links.map((link) => {
             const isActive = active === link.href;
             return (
               <a
@@ -135,7 +152,7 @@ export function Nav() {
             className="mx-auto mt-3 max-w-wide overflow-hidden rounded-card border border-strong bg-[var(--bg)]/95 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.65)] backdrop-blur-xl lg:hidden"
           >
             <nav className="flex flex-col gap-1 px-4 py-4" aria-label="Mobile">
-              {NAV_LINKS.map((link) => (
+              {links.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}

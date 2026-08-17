@@ -14,6 +14,7 @@ next-env.d.ts
 
 # internal brand source docs — kept out of the public repo
 brand material/
+leakproof-project-brief.html
 
 # local editor/agent config
 .claude/
