@@ -165,7 +165,7 @@ function compile(gl: WebGL2RenderingContext, type: number, src: string) {
   return s;
 }
 
-export function Backdrop() {
+export function Backdrop({ opacity = 1 }: { opacity?: number } = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fallbackRef = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
@@ -325,7 +325,13 @@ export function Backdrop() {
   }, []);
 
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
+    /* `opacity` damps the arc on pages that shouldn't wear the homepage's
+       hero graphic — the shader still runs, it just sits further back. */
+    <div
+      aria-hidden
+      className="pointer-events-none fixed inset-0 z-0"
+      style={opacity === 1 ? undefined : { opacity }}
+    >
       {/* CSS fallback (only shown if WebGL fails) */}
       <div
         ref={fallbackRef}

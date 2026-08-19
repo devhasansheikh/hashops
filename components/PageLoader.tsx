@@ -1,17 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { useReduceMotion } from "@/lib/useReduceMotion";
 import { Logo } from "@/components/Logo";
 
 const ease = [0.2, 0.7, 0.3, 1] as const;
 
 /**
+ * The brand intro belongs to a genuine arrival at the front door.
+ *
+ * This is mounted in the root layout, so it used to replay byte-identically on
+ * every route — landing on /leakproof felt like arriving at a different site
+ * rather than opening a page of this one.
+ *
+ * The gate is the route the browser LANDED on, captured once per document
+ * load. Because this component never unmounts, that ref is immune to
+ * client-side navigation, so neither a click into a subpage nor the logo click
+ * back out of one can replay the intro. A real page load on "/" still plays
+ * it, exactly as before.
+ */
+export function PageLoader() {
+  const pathname = usePathname();
+  const landedOn = useRef(pathname);
+  return landedOn.current === "/" ? <Intro /> : null;
+}
+
+/**
  * Fast branded intro showing the official HASH lockup, then clears quickly so
  * first paint isn't blocked.
  */
-export function PageLoader() {
+function Intro() {
   const reduce = useReduceMotion();
   const [done, setDone] = useState(false);
 

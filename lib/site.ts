@@ -21,13 +21,3 @@ export const NAV_LINKS = [
   { label: "FAQ", href: "#faq" },
   { label: "Leakproof", href: "/leakproof" },
 ] as const;
-
-/** Section links for the Leakproof service page (route links start with "/"). */
-export const LEAKPROOF_NAV_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "The leak", href: "#planes" },
-  { label: "The audit", href: "#offer" },
-  { label: "Process", href: "#process" },
-  { label: "Guarantee", href: "#guarantee" },
-  { label: "FAQ", href: "#faq" },
-] as const;
