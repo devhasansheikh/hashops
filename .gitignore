@@ -12,22 +12,14 @@ npm-debug.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# internal brand source docs — kept out of the public repo
+# Internal source material — this repo is PUBLIC, and everything listed here
+# is still sitting in the project root. Entries for the case-study uploads
+# (the metrics and client PDFs, UPLABS Asset, Royal Key Supply, PRIMAS BCC) and
+# the loose issue.png / response.jpeg were dropped once those files left the
+# working tree; re-add them here BEFORE putting that kind of material back.
 brand material/
 leakproof-project-brief.html
-
-# case-study source material — internal briefs carrying publish gates, client
-# pricing and sales notes, plus raw client screenshots and screen recordings.
-# Only the optimized hero images in public/case-studies/ are published.
-HASH_Case_Study_*.pdf
-UPLABS Asset/
-Royal Key Supply/
-PRIMAS BCC/
-
-# working briefs and screenshots dropped in the project root
-issue.png
 Leakproof-Page-Prompt.md
-response.jpeg
 
 # local editor/agent config
 .claude/
