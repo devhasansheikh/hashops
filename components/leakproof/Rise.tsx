@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useCalm } from "@/components/leakproof/useCalm";
+import { useObserverDown } from "@/components/leakproof/useObserverDown";
 
 const EASE = [0.2, 0.7, 0.3, 1] as const;
 
@@ -24,6 +25,12 @@ type RiseProps = {
  * (46px + blur + scale over ~1s, applied by SectionFX). This page is a
  * document you read straight through, not a sequence of stages you arrive at,
  * so nothing else moves on scroll — see Reconciliation for the one exception.
+ *
+ * The resting state of a reveal is opacity 0, which means a broken
+ * IntersectionObserver does not cost this page an animation, it costs the page
+ * its content. When the probe says the observer is down, every Rise reveals on
+ * mount instead of on intersection: no scroll dependency, same 400ms, same
+ * final state.
  */
 export function Rise({
   children,
@@ -33,6 +40,7 @@ export function Rise({
   className,
 }: RiseProps) {
   const calm = useCalm();
+  const observerDown = useObserverDown();
   const Motion = TAGS[as];
 
   if (calm) {
@@ -46,7 +54,7 @@ export function Rise({
     <Motion
       className={className}
       initial={{ opacity: 0, y: 8 }}
-      {...(immediate
+      {...(immediate || observerDown
         ? { animate: shown }
         : { whileInView: shown, viewport: { once: true, margin: "-64px" } })}
       transition={{ duration: 0.4, delay, ease: EASE }}

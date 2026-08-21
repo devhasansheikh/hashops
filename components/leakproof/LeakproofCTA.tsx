@@ -1,10 +1,33 @@
 import { Rise } from "@/components/leakproof/Rise";
 import { BookCallButton } from "@/components/ui/Buttons";
+import { CONTACT_EMAIL } from "@/lib/site";
+
+/**
+ * Where a Leak Scan lands, and what lands in the subject line.
+ *
+ * Kept as constants so this can be repointed at a dedicated inbox without
+ * anyone editing markup.
+ */
+const LEAK_SCAN_EMAIL = CONTACT_EMAIL;
+const LEAK_SCAN_SUBJECT = "Leak Scan";
+const LEAK_SCAN_MAILTO = `mailto:${LEAK_SCAN_EMAIL}?subject=${encodeURIComponent(
+  LEAK_SCAN_SUBJECT,
+)}`;
 
 /**
  * Closing panel. Deliberately NOT the homepage's centred always-dark band —
  * this one is left-aligned and theme-native, so it reads as the end of a
  * service page rather than the end of the site.
+ *
+ * Two asks, in order of size. The call stays the primary path and keeps its
+ * own reassurance line; the Leak Scan sits below a hairline as a text link, a
+ * standing low-commitment path for anyone not ready to book. It is not a
+ * campaign mechanic and it is offered to every visitor.
+ *
+ * The link's label IS the address, on purpose: `mailto:` is unreliable in an
+ * in-app webview, and a tap that silently does nothing is worse than no link
+ * at all. Rendered this way the address is always readable and always
+ * copyable, whether or not the handler fires.
  */
 export function LeakproofCTA() {
   return (
@@ -38,6 +61,23 @@ export function LeakproofCTA() {
               If it isn&apos;t a fit for your agency, we&apos;ll tell you on the
               call.
             </p>
+
+            <div className="mt-8 border-t border-line pt-7">
+              <p className="max-w-[58ch] text-[14.5px] leading-relaxed text-body">
+                <strong className="font-semibold text-heading">
+                  Not ready for a call?
+                </strong>{" "}
+                Send us one client&apos;s contract and one month of time
+                entries. We&apos;ll reconcile them and send back what we find:
+                one page, no meeting, inside 48 hours.
+              </p>
+              <a
+                href={LEAK_SCAN_MAILTO}
+                className="mt-3.5 inline-block break-all font-mono text-[13.5px] font-medium text-flametext underline decoration-[var(--border-strong)] underline-offset-[5px] transition-colors duration-300 hover:decoration-current"
+              >
+                {LEAK_SCAN_EMAIL}
+              </a>
+            </div>
           </div>
         </div>
       </Rise>

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { animate, motion, useInView } from "framer-motion";
 import { useCalm } from "@/components/leakproof/useCalm";
+import { useObserverDown } from "@/components/leakproof/useObserverDown";
 import { Rise } from "@/components/leakproof/Rise";
 import { step } from "@/components/leakproof/stagger";
 
@@ -76,6 +77,52 @@ const FILL = {
     "repeating-linear-gradient(115deg, var(--ember) 0 5px, transparent 5px 10px)",
 } as const;
 
+/**
+ * Visibility, checked two ways.
+ *
+ * The bars are the page argument, and plenty of arrivals land here in a
+ * constrained webview: a viewport short enough that a percentage rootMargin
+ * leaves very little band to intersect, in an engine nobody here has tested.
+ * If the IntersectionObserver never reports, the figure renders as three empty
+ * troughs and a counter stuck on zero, which reads as a broken page rather
+ * than a page that chose not to animate.
+ *
+ * So there are two more paths. The shared probe catches an observer that is
+ * missing or silent outright. Measuring the rect on scroll and resize catches
+ * the subtler case: an observer that works elsewhere but never reports THIS
+ * element, in a viewport shorter than the margins assume. Whichever path fires
+ * first wins, and the listeners remove themselves the moment one does. Below
+ * the fold with a working observer, nothing here ever runs.
+ */
+function useRevealed() {
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-15% 0px -15% 0px" });
+  const observerDown = useObserverDown();
+  const [measured, setMeasured] = useState(false);
+
+  useEffect(() => {
+    if (inView || measured) return;
+    const check = () => {
+      const el = ref.current;
+      if (!el) return;
+      const box = el.getBoundingClientRect();
+      if (box.top < window.innerHeight * 0.9 && box.bottom > 0) {
+        setMeasured(true);
+      }
+    };
+    const settle = window.setTimeout(check, 1200);
+    window.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check, { passive: true });
+    return () => {
+      window.clearTimeout(settle);
+      window.removeEventListener("scroll", check);
+      window.removeEventListener("resize", check);
+    };
+  }, [inView, measured]);
+
+  return { ref, revealed: inView || observerDown || measured };
+}
+
 /** Counts once, after the bars have drawn. Static under reduced motion. */
 function useTally(play: boolean, calm: boolean) {
   const [v, setV] = useState(calm ? RECOVERABLE : 0);
@@ -108,10 +155,9 @@ function useTally(play: boolean, calm: boolean) {
  */
 function Bars() {
   const calm = useCalm();
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-15% 0px -15% 0px" });
-  const play = inView && !calm;
-  const tally = useTally(inView, calm);
+  const { ref, revealed } = useRevealed();
+  const play = revealed && !calm;
+  const tally = useTally(revealed, calm);
 
   const draw = (delay: number, width: number, duration: number) =>
     calm

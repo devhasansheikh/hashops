@@ -19,7 +19,7 @@ next-env.d.ts
 # working tree; re-add them here BEFORE putting that kind of material back.
 brand material/
 leakproof-project-brief.html
-Leakproof-Page-Prompt.md
+leakproof-page-prompt*
 
 # local editor/agent config
 .claude/
