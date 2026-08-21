@@ -39,7 +39,24 @@ export function DesignPartners() {
   if (DESIGN_PARTNER_SLOTS < 1) return null;
 
   return (
-    <section className="relative border-y border-line bg-surface2 px-5 sm:px-8">
+    /* Two spacing fixes, both caused by the same thing: this is the only
+       section on the page that paints its own background, so space that used
+       to fall outside a container now falls inside a visible one.
+
+       `mb` — the closing panel's `pt-6` was sized when the section above it
+       ended in bare page background, where its 64/80px of padding read as
+       clear space. Inside the tint that space is no longer a gap, and the
+       band's bottom edge ends up almost touching the panel. 40/56 here plus
+       the panel's own top padding restores the page's py-16/py-20 rhythm. It
+       sits on the band, not the panel, so it disappears at 0 slots.
+
+       `!py-0` — globals.css gives every `main > section` 4.5rem of vertical
+       padding under 768px. Unpainted sections just read that as mobile
+       rhythm; here it stacks on top of the inner py-16 and leaves 136px of
+       empty tint above and below the copy. Zeroed so the inner padding is
+       the tint's only inset. No-op above 768px, where the rule doesn't
+       apply. */
+    <section className="relative mb-10 !py-0 border-y border-line bg-surface2 px-5 sm:mb-14 sm:px-8">
       <div className="mx-auto max-w-content py-16 sm:py-20">
         <Rise>
           <p className="flex items-center gap-2.5 font-mono text-[10.5px] font-medium uppercase tracking-[0.16em] text-flametext">
